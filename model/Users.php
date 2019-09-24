@@ -4,7 +4,7 @@
 namespace model;
 
 
-use PDO;
+use core\DBDriverInterface;
 
 class Users extends Base
 {
@@ -21,22 +21,17 @@ class Users extends Base
 
     const HASH_SALT = '@2|\4/1*&';
 
-    public function __construct(PDO $db)
+    public function __construct(DBDriverInterface $db)
     {
         parent::__construct($db, 'users', 'id_user');
     }
 
     public function insert(string $userName, string $password)
     {
-        $this->dbQuery(
-            "INSERT INTO {$this->tableName}(`user_name`, `password`) VALUES (:username, :password)",
-            [
-                'username' => $userName,
-                'password' => self::hashSha512($password)
-            ]
-        );
-
-        return $this->db->lastInsertId();
+        return $this->db->create($this->tableName, [
+            'username' => $userName,
+            'password' => self::hashSha512($password)
+        ]);
     }
 
     public static function hashSha512(string $str)
@@ -46,19 +41,27 @@ class Users extends Base
 
     public function exists(string $userName)
     {
-        return (bool)$this->dbQuery(
-            "select exists(select id_user from {$this->tableName} where user_name = :user) as user_exist",
-            [
-                'user' => $userName
-            ]
-        )->fetch(PDO::FETCH_ASSOC)['user_exist'];
+        return boolval(
+            $this->db->read(
+                "select exists(select id_user from {$this->tableName} where user_name = :user) as user_exist",
+                $this->db::FETCH_ONE,
+                [
+                    'user' => $userName
+                ]
+            )['user_exist']
+        );
+
     }
 
     public function getByName(string $userName)
     {
-        return $this->dbQuery("select * from {$this->tableName} where user_name = :user", [
-            'user' => $userName
-        ])->fetch(PDO::FETCH_ASSOC);
+        return $this->db->read(
+            "select * from {$this->tableName} where user_name = :user",
+            $this->db::FETCH_ONE,
+            [
+                'user' => $userName
+            ]
+        );
     }
 
     public function checkPasswords(string $password, string $re_password)

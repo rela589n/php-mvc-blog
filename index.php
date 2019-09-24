@@ -18,6 +18,7 @@ session_start();
 
 $db = DBConnector::getPdo();
 
+
 $params = explode('/', $_GET['php_hru']);
 if ($params[$last = count($params) - 1] == '') {
     unset($params[$last]);
@@ -50,6 +51,7 @@ if (!in_array($controller, array_keys(CONTROLLERS_MAP), true)) {
 
     $controller = new $controller();
     $controller->$action($id);
+
 
     $controller->render();
 }

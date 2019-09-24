@@ -5,6 +5,7 @@ namespace controller;
 
 
 use core\DBConnector;
+use core\DBDriver;
 use model\Authorization;
 use model\Users;
 
@@ -12,7 +13,7 @@ class Authentication extends Base
 {
     public function indexAction()
     {
-        $db = DBConnector::getPdo();
+        $db = new DBDriver( DBConnector::getPdo());
         $mUsers = new Users($db);
         $mAuth = new Authorization($mUsers);
         $msg = '';
@@ -24,7 +25,7 @@ class Authentication extends Base
 
             if (!$userName || !$password) {
                 $msg = FILL_IN_ALL_FIELDS;
-            } elseif ($mAuth->authorize($userName, $password, $remember)) {
+            } elseif (!$mAuth->authorize($userName, $password, $remember)) {
                 $msg = INVALID_LOGIN_OR_PASSWORD;
             } else {
                 if (isset($_SESSION['back_redirect'])) {
@@ -53,7 +54,7 @@ class Authentication extends Base
 
     public function registerAction()
     {
-        $db = DBConnector::getPdo();
+        $db = new DBDriver(DBConnector::getPdo());
         $mUsers = new Users($db);
         $msg = '';
 

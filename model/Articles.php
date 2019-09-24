@@ -4,7 +4,6 @@
 namespace model;
 
 use core\DBDriverInterface;
-use PDO;
 
 class Articles extends Base
 {

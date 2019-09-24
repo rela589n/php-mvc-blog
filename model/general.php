@@ -59,6 +59,7 @@ define('CONTROLLERS_MAP', [
 //    'add' => 'add.php',
 //    'dashboard' => 'dashboard/index.php',
     'auth' => '\controller\Authentication',
+    'dashboard' => '\\controller\\Dashboard',
 //    'login' => '\controller\Authentication',
 //    'register' => '\controller\Authentication'
 ]);

@@ -5,6 +5,7 @@ namespace controller;
 
 
 use core\DBConnector;
+use core\DBDriver;
 use model\Authorization;
 use model\Texts;
 use model\Users;
@@ -32,7 +33,7 @@ abstract class Base
             $this->title = $this->error404['title'] ?? TITLE_404;
         }
         if (!isset($this->menu)) {
-            $mUsers = new Users(DBConnector::getPdo());
+            $mUsers = new Users(new DBDriver(DBConnector::getPdo()));
             $mAuth = new Authorization($mUsers);
             $this->menu = self::getTemplate('header_menu/v_main.php', [
                 'isAuth' => $mAuth->isAuth()
@@ -44,7 +45,7 @@ abstract class Base
 
         if (!isset($this->footer)) {
 
-            $mTexts = new Texts(DBConnector::getPdo());
+            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()));
             $this->footer = self::getTemplate('v_footer.php', [
                 'title1' => $mTexts->getOne('footer_1'),
                 'title2' => $mTexts->getOne('footer_2'),

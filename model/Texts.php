@@ -4,13 +4,14 @@
 namespace model;
 
 
+use core\DBDriverInterface;
 use PDO;
 
 class Texts extends Base
 {
     const TEXT_VALUE_PREVIEW_MAX_LENGTH = 60;
 
-    public function __construct(PDO $db)
+    public function __construct(DBDriverInterface $db)
     {
         parent::__construct($db, "dashboard_texts", "alias");
     }
@@ -22,14 +23,19 @@ class Texts extends Base
 
     public function update(string $name, string $value, string $alias)
     {
-        return (bool)$this->dbQuery(
-            'UPDATE `dashboard_texts` SET `name`=:new_name,`value`=:new_value WHERE alias = :alias',
+        return $this->db->update(
+            $this->tableName,
             [
-                'new_name' => $name,
-                'new_value' => $value,
+                'name' => $name,
+                'value' => $value,
+                'alias' => $alias
+            ],
+            "{$this->idAlias} = :alias",
+            [
                 'alias' => $alias
             ]
         );
+
     }
 
     public function getPreview(array $text)

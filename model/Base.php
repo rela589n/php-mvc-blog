@@ -3,7 +3,6 @@
 namespace model;
 
 use core\DBDriverInterface;
-use PDOStatement;
 
 abstract class Base
 {

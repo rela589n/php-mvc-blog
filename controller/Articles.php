@@ -5,6 +5,7 @@ namespace controller;
 
 
 use core\DBConnector;
+use core\DBDriver;
 use model\Authorization;
 use model\Users;
 
@@ -14,7 +15,7 @@ class Articles extends Base
     {
         $this->title = 'All articles';
 
-        $db = DBConnector::getPdo();
+        $db = new DBDriver(DBConnector::getPdo());
         $mArticles = new \model\Articles($db);
         $mUsers = new Users($db);
         $mAuth = new Authorization($mUsers);
@@ -39,7 +40,7 @@ class Articles extends Base
 
     public function singleAction($id)
     {
-        $db = DBConnector::getPdo();
+        $db = new DBDriver(DBConnector::getPdo());
         $mArticles = new \model\Articles($db);
 
         if (!$mArticles::checkId($id)) {
@@ -70,7 +71,8 @@ class Articles extends Base
     }
 
     public function editAction($id) {
-        $db = DBConnector::getPdo();
+        $db = new DBDriver(DBConnector::getPdo());
+
         $mUsers = new Users($db);
         $mAuth = new Authorization($mUsers);
         if (!$mAuth->isAuth()) {
@@ -135,7 +137,7 @@ class Articles extends Base
     }
 
     public function addAction($id) {
-        $db = DBConnector::getPdo();
+        $db = new DBDriver(DBConnector::getPdo());
 
         $mUsers = new Users($db);
         $mAuth = new Authorization($mUsers);

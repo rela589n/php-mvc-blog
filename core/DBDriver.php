@@ -12,7 +12,7 @@ class DBDriver implements DBDriverInterface
 {
     private $db;
 
-    public function __construct(\PDO $db)
+    public function __construct(PDO $db)
     {
         $this->db = $db;
     }
@@ -59,10 +59,10 @@ class DBDriver implements DBDriverInterface
 
         self::checkErrors($statement);
         if ($fetch === self::FETCH_ONE) {
-            return $statement->fetch(\PDO::FETCH_ASSOC);
+            return $statement->fetch(PDO::FETCH_ASSOC);
         }
         if ($fetch === self::FETCH_ALL) {
-            return $statement->fetchAll(\PDO::FETCH_ASSOC);
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
 
         throw new RuntimeException(
