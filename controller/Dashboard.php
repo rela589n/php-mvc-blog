@@ -9,13 +9,15 @@ use core\DBDriver;
 use model\Authorization;
 use model\Texts;
 use model\Users;
+use model\Validator;
 
 class Dashboard extends Base
 {
     public function indexAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUsers = new Users($db);
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
 
         if (!$mAuth->isAuth()) {
@@ -31,14 +33,15 @@ class Dashboard extends Base
 
     public function textsAction() {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUsers = new Users($db);
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
 
         if (!$mAuth->isAuth()) {
             redirect(ROOT . 'auth/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
-        $mTexts = new Texts($db);
+        $mTexts = new Texts($db, $validator);
         $this->content = self::getTemplate('dashboard/texts/v_texts.php', [
             'texts' => $mTexts->getPreviews($mTexts->getAll())
         ]);

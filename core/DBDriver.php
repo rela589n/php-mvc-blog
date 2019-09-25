@@ -4,9 +4,9 @@
 namespace core;
 
 
-use http\Exception\RuntimeException;
 use PDO;
 use PDOStatement;
+use RuntimeException;
 
 class DBDriver implements DBDriverInterface
 {
@@ -81,14 +81,8 @@ class DBDriver implements DBDriverInterface
 
     public function update(string $table, array $setParams, string $where, array $whereParams)
     {
-        if (empty(array_intersect_key($setParams, $whereParams))) {
-            throw new RuntimeException(
-                sprintf(
-                    'The same keys in \$setParams and \$whereParams in %s:%s',
-                    __FILE__,
-                    __LINE__
-                )
-            );
+        if (!empty(array_intersect_key($setParams, $whereParams))) {
+            throw new RuntimeException('The same keys in $setParams and $whereParams');
         };
 
         $set = implode(', ', $this->mapParams(array_keys($setParams)));

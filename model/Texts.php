@@ -11,9 +11,9 @@ class Texts extends Base
 {
     const TEXT_VALUE_PREVIEW_MAX_LENGTH = 60;
 
-    public function __construct(DBDriverInterface $db)
+    public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        parent::__construct($db, "dashboard_texts", "alias");
+        parent::__construct($db, $validator, "dashboard_texts", "alias");
     }
 
     public function getOne(string $alias)

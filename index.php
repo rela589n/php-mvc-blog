@@ -2,11 +2,7 @@
 
 include_once 'model/general.php';
 
-
 use core\DBConnector;
-use model\Authorization;
-use model\Texts;
-use model\Users;
 
 spl_autoload_register(function ($classPath) {
     $classPath = str_replace('\\', '/', $classPath);
@@ -14,7 +10,6 @@ spl_autoload_register(function ($classPath) {
 });
 
 session_start();
-
 
 $db = DBConnector::getPdo();
 

@@ -8,13 +8,16 @@ use core\DBConnector;
 use core\DBDriver;
 use model\Authorization;
 use model\Users;
+use model\Validator;
 
 class Authentication extends Base
 {
     public function indexAction()
     {
         $db = new DBDriver( DBConnector::getPdo());
-        $mUsers = new Users($db);
+
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
         $msg = '';
 
@@ -55,7 +58,8 @@ class Authentication extends Base
     public function registerAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUsers = new Users($db);
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $msg = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

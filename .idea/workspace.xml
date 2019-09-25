@@ -45,6 +45,13 @@
         <item name="simple_blog@localhost" type="feb32156:DbDataSourceImpl" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="simple_blog: schema" type="ebfa3cd1:MariaImplModel$Schema" />
+        <item name="articles: table" type="dbc44a63:MariaImplModel$Table" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="simple_blog@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="simple_blog: schema" type="ebfa3cd1:MariaImplModel$Schema" />
         <item name="dashboard_texts: table" type="dbc44a63:MariaImplModel$Table" />
       </path>
       <path>
@@ -189,7 +196,8 @@
       <workItem from="1569127251254" duration="1115000" />
       <workItem from="1569171747098" duration="3991000" />
       <workItem from="1569250528850" duration="591000" />
-      <workItem from="1569340883769" duration="404000" />
+      <workItem from="1569340883769" duration="2882000" />
+      <workItem from="1569381865571" duration="2305000" />
     </task>
     <servers />
   </component>

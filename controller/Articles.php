@@ -8,6 +8,7 @@ use core\DBConnector;
 use core\DBDriver;
 use model\Authorization;
 use model\Users;
+use model\Validator;
 
 class Articles extends Base
 {
@@ -16,8 +17,10 @@ class Articles extends Base
         $this->title = 'All articles';
 
         $db = new DBDriver(DBConnector::getPdo());
-        $mArticles = new \model\Articles($db);
-        $mUsers = new Users($db);
+        $validator = new Validator();
+
+        $mArticles = new \model\Articles($db, $validator);
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
 
         $articles = $mArticles->getAll();
@@ -41,12 +44,13 @@ class Articles extends Base
     public function singleAction($id)
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mArticles = new \model\Articles($db);
+        $validator = new Validator();
+        $mArticles = new \model\Articles($db, $validator);
 
         if (!$mArticles::checkId($id)) {
             redirect(ROOT . '?msg=' . urlencode($mArticles::$lastError));
         }
-        $mUsers = new Users($db);
+        $mUsers = new Users($db, $validator); // validator may cause error!
         $mAuth = new Authorization($mUsers);
 
         $this->sidebar = self::getTemplate( 'sidebar/v_sidebar_short.php');
@@ -73,14 +77,15 @@ class Articles extends Base
     public function editAction($id) {
         $db = new DBDriver(DBConnector::getPdo());
 
-        $mUsers = new Users($db);
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
-        $mArticles = new \model\Articles($db);
+        $mArticles = new \model\Articles($db, $validator);
         if (!$mArticles::checkId($id)) {
             redirect(ROOT . '?msg=' . urlencode($mArticles::$lastError));
         }
@@ -98,7 +103,7 @@ class Articles extends Base
             } else {
                 unset($_SESSION['edit_id']);
 
-                if ($id = $mArticles->update( $id, $articleTitle, $articleContent)) {
+                if ($mArticles->update( $id, $articleTitle, $articleContent)) {
                     redirect(ROOT . "article/$id/");
                 } else {
                     redirect(ROOT . '?msg=' . urlencode(ARTICLE_SAVE_ERROR));
@@ -139,14 +144,15 @@ class Articles extends Base
     public function addAction($id) {
         $db = new DBDriver(DBConnector::getPdo());
 
-        $mUsers = new Users($db);
+        $validator = new Validator();
+        $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
         if (!$mAuth->isAuth()){
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
-        $mArticle = new \model\Articles($db);
+        $mArticle = new \model\Articles($db, $validator);
         $msg = '';
         $articleTitle = '';
         $articleContent = '';

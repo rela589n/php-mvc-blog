@@ -7,6 +7,23 @@ use core\DBDriverInterface;
 
 class Articles extends Base
 {
+    private const SCHEMA = [
+        'article_id' => [
+            'type' => 'int'
+        ],
+        'title' => [
+            'type' => 'string',
+            'length' => [8, 64],
+        ],
+//        'preview' => [
+//            ''
+//        ],
+        'content' => [
+            'type' => 'string',
+            'length' => [8],
+        ]
+    ];
+
     const EMPTY_TITLE = 'Внимание! Название статьи не может быть пустым!';
     const TITLE_MIN_LEN = 8;
     const TITLE_MAX_LEN = 64;
@@ -23,9 +40,10 @@ class Articles extends Base
     const CONTENT_PREVIEW_MAX_LENGTH = 20;
 
     private $joinTable = null;
-    public function __construct(DBDriverInterface $db)
+    public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        parent::__construct($db, 'articles', 'article_id');
+        $validator->setRules(self::SCHEMA);
+        parent::__construct($db, $validator, 'articles', 'article_id');
         $this->joinTable = 'users';
     }
 
@@ -62,7 +80,7 @@ class Articles extends Base
         return $this->db->create($this->tableName, [
             'title' => $title,
             'content' => $content,
-            'user_id' => $userId
+            'id_user' => $userId
         ]);
     }
 

@@ -9,18 +9,21 @@ abstract class Base
     protected $db;
     protected $tableName;
     protected $idAlias;
+    protected $validator;
 
     public static $lastError = '';
 
     /**
      * BaseModel constructor.
-     * @param $db
-     * @param $tableName
-     * @param $idAlias
+     * @param DBDriverInterface $db
+     * @param Validator $validator
+     * @param string $tableName
+     * @param string $idAlias
      */
-    public function __construct(DBDriverInterface $db, string $tableName, string $idAlias)
+    public function __construct(DBDriverInterface $db, Validator $validator, string $tableName, string $idAlias)
     {
         $this->db = $db;
+        $this->validator = $validator;
         $this->tableName = $tableName;
         $this->idAlias = $idAlias;
     }
@@ -48,6 +51,9 @@ abstract class Base
         );
     }
 
+    public function validate() {
+        $this->validator->execute();
+    }
 
 //    public function insert(array $params)
 //    {

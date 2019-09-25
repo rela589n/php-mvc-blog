@@ -9,6 +9,7 @@ use core\DBDriver;
 use model\Authorization;
 use model\Texts;
 use model\Users;
+use model\Validator;
 
 abstract class Base
 {
@@ -33,8 +34,10 @@ abstract class Base
             $this->title = $this->error404['title'] ?? TITLE_404;
         }
         if (!isset($this->menu)) {
-            $mUsers = new Users(new DBDriver(DBConnector::getPdo()));
+            $validator = new Validator();
+            $mUsers = new Users(new DBDriver(DBConnector::getPdo()), $validator);
             $mAuth = new Authorization($mUsers);
+
             $this->menu = self::getTemplate('header_menu/v_main.php', [
                 'isAuth' => $mAuth->isAuth()
             ]);
@@ -44,8 +47,8 @@ abstract class Base
         }
 
         if (!isset($this->footer)) {
-
-            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()));
+            $validator = new Validator();
+            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()), $validator);
             $this->footer = self::getTemplate('v_footer.php', [
                 'title1' => $mTexts->getOne('footer_1'),
                 'title2' => $mTexts->getOne('footer_2'),

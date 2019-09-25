@@ -21,9 +21,28 @@ class Users extends Base
 
     const HASH_SALT = '@2|\4/1*&';
 
-    public function __construct(DBDriverInterface $db)
+    private const SCHEMA = [
+        'article_id' => [
+            'type' => 'int'
+        ],
+        'title' => [
+            'type' => 'string',
+            'length' => [8, 64],
+        ],
+//        'preview' => [
+//            ''
+//        ],
+        'content' => [
+            'type' => 'string',
+            'length' => [8],
+        ]
+    ];
+
+
+    public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        parent::__construct($db, 'users', 'id_user');
+        $validator->setRules(self::SCHEMA);
+        parent::__construct($db, $validator, 'users', 'id_user');
     }
 
     public function insert(string $userName, string $password)
