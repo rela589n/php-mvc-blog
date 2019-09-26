@@ -41,7 +41,7 @@ class Users extends Base
 
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        $validator->setRules(self::SCHEMA);
+        $validator->setSchema(self::SCHEMA);
         parent::__construct($db, $validator, 'users', 'id_user');
     }
 

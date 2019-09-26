@@ -42,7 +42,7 @@ class Articles extends Base
     private $joinTable = null;
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        $validator->setRules(self::SCHEMA);
+        $validator->setSchema(self::SCHEMA);
         parent::__construct($db, $validator, 'articles', 'article_id');
         $this->joinTable = 'users';
     }

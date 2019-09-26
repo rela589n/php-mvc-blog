@@ -47,7 +47,5 @@ class Dashboard extends Base
         ]);
 
         $this->title = DASHBOARD_PAGE_TITLE;
-
     }
-
 }
