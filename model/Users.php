@@ -22,19 +22,22 @@ class Users extends Base
     const HASH_SALT = '@2|\4/1*&';
 
     private const SCHEMA = [
-        'article_id' => [
-            'type' => 'int'
+        'id_user' => [
+            'type' => 'int',
         ],
-        'title' => [
+        'user_name' => [
             'type' => 'string',
-            'length' => [8, 64],
+            'length' => [4, 64],
+            'required' => true
         ],
-//        'preview' => [
-//            ''
-//        ],
-        'content' => [
+        'password' => [
             'type' => 'string',
-            'length' => [8],
+            'length' => [5, 50],
+            'required' => true
+        ],
+        're_password' => [
+            'equals_to' => 'password',
+            'required' => true
         ]
     ];
 
@@ -48,7 +51,7 @@ class Users extends Base
     public function insert(string $userName, string $password)
     {
         return $this->db->create($this->tableName, [
-            'username' => $userName,
+            'user_name' => $userName,
             'password' => self::hashSha512($password)
         ]);
     }

@@ -4,7 +4,19 @@
 +0. Add class
 +1. setter accepts rules, that describe table schema
 2. models must have array property rules.
-3. each model accepts validator and set for him proper rules
+3. models accept validator and set for him proper rules
 4. then pass validator up to base model
-5. base model must have method validate that execute validation
-6. create validation method
+5. base model must have method validate which execute validation
+
++6. validation capabilities: (required, length, preg_match, type, equals_to)
++7. create validation method
+    +7.1 create method checkLength
+    +7.2 create method checkType
+8.
+
+/** Exception handling **/
+0. Validation into Validator
+1. add 404 page controller
+2. create class ModelException
+3. create class InvalidDataException
+4. create class ValidatorException

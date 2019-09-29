@@ -61,21 +61,26 @@ class Authentication extends Base
         $validator = new Validator();
         $mUsers = new Users($db, $validator);
         $msg = '';
+        $errors = null;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $userName = secure_data($_POST['name']);
             $password = secure_data($_POST['password']);
             $rePassword = secure_data($_POST['re_password']);
 
+            $validator->validateByFields([
+                'user_name' => $userName,
+                'password' => $password,
+                're_password' => $rePassword
+            ]);
 
-            if (!($userName && $password && $rePassword)) {
-                $msg = FILL_IN_ALL_FIELDS;
-            } elseif (!($mUsers->checkPasswords($password, $rePassword)
-                && $mUsers->checkUserName($userName))) {
-                $msg = $mUsers::$lastError;
-            } else {
+            if (!$validator->success) {
+//                var_dump($validator->errors);
+                $errors = $validator->errors;
+            }
+            else {
                 $mUsers->insert($userName, $password);
-                redirect(ROOT . 'login/?msg=' . urlencode($mUsers::REGISTRATION_SUCCESSFUL));
+                redirect(ROOT . 'auth/?msg=' . urlencode($mUsers::REGISTRATION_SUCCESSFUL));
             }
         } else {
             $msg = '';
@@ -89,6 +94,7 @@ class Authentication extends Base
             'userName' => $userName,
             'first_password' => $password,
             'second_password' => $rePassword,
+            'errors' => $errors,
             'message' => $msg
         ]);
     }

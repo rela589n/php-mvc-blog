@@ -3,6 +3,8 @@
 namespace model;
 
 use core\DBDriverInterface;
+use core\exceptions\IncorrectDataException;
+use core\exceptions\ValidatorException;
 
 abstract class Base
 {
@@ -30,6 +32,14 @@ abstract class Base
 
     public function getById($id)
     {
+        $this->validator->validateByFields([
+            $this->idAlias => $id
+        ]);
+
+        if (!$this->validator->success) {
+            throw new IncorrectDataException("Invalid param id passed!");
+        }
+
         return $this->db->read(
             "SELECT * FROM {$this->tableName} WHERE {$this->idAlias} = :id",
             $this->db::FETCH_ONE,
@@ -44,15 +54,19 @@ abstract class Base
 
     public function deleteById($id)
     {
+        $this->validator->validateByFields([
+            $this->idAlias => $id
+        ]);
+
+        if (!$this->validator->success) {
+            throw new IncorrectDataException("Invalid param id passed!");
+        }
+
         return $this->db->delete(
             $this->tableName,
             "{$this->idAlias} = :id",
             ['id' => $id]
         );
-    }
-
-    public function validate() {
-        $this->validator->execute();
     }
 
 //    public function insert(array $params)

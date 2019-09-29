@@ -97,6 +97,9 @@ td {
 	margin: 0 auto;
 }
 
+.red {
+	color: #FF0462;
+}
 /* Header */
 
 #header {

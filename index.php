@@ -44,63 +44,13 @@ if (!in_array($controller, array_keys(CONTROLLERS_MAP), true)) {
 
     $action .= 'Action';
 
-    $controller = new $controller();
-    $controller->$action($id);
 
+//    try {
+        $controller = new $controller();
+        $controller->$action($id);
+        $controller->render();
 
-    $controller->render();
+//    } catch (Exception $e) {
+//        var_dump($e->getMessage(), $e->getTrace());
+//    }
 }
-
-/*
-
-if ($error404) {
-    $content = get_template('404.php', [
-        'message' => $error404['message'] ?? PAGE_NOT_FOUND
-    ]);
-    $title = $error404['title'] ?? TITLE_404;
-}
-
-
-if (!isset($menu)) {
-    $mUsers = new Users($db);
-    $mAuth = new Authentication($mUsers);
-    $menu = get_template('v_main.php', [
-        'isAuth' => $mAuth->isAuth()
-    ]);
-}
-
-if (!isset($sidebar)) {
-    $sidebar = get_template('sidebar/v_sidebar.php');
-}
-
-if (!isset($footer)) {
-    $mTexts = new Texts($db);
-    $footer = get_template('v_footer.php', [
-        'copyright' => sprintf($mTexts->getOne('copyright'), date('Y')),
-        'title1' => $mTexts->getOne('footer_1'),
-        'title2' => $mTexts->getOne('footer_2'),
-        'title3' => $mTexts->getOne('footer_3'),
-    ]);
-}
-print_template('v_main.php', [
-    'title' => $title ?? '',
-    'menu' => $menu,
-    'sidebar' => $sidebar,
-    'content' => $content ?? '',
-    'footer' => $footer,
-    'message' => $message ?? ''
-]);*/
-
-/*
-
-
-/article/
-/article/10/
-/article/edit/10
-/article/add/
-
-
-
-
-
- */

@@ -11,9 +11,26 @@ class Texts extends Base
 {
     const TEXT_VALUE_PREVIEW_MAX_LENGTH = 60;
 
+    private const SCHEMA = [
+        'alias' => [
+            'type' => 'string',
+            'length' => [64]
+        ],
+        'name' => [
+            'type' => 'string',
+            'length' => [4, 128],
+        ],
+        'value' => [
+            'type' => 'string',
+            'length' => 256,
+        ]
+    ];
+
+
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
         parent::__construct($db, $validator, "dashboard_texts", "alias");
+        $this->validator->setSchema(self::SCHEMA);
     }
 
     public function getOne(string $alias)

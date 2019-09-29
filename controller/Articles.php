@@ -47,9 +47,14 @@ class Articles extends Base
         $validator = new Validator();
         $mArticles = new \model\Articles($db, $validator);
 
-        if (!$mArticles::checkId($id)) {
-            redirect(ROOT . '?msg=' . urlencode($mArticles::$lastError));
+        $validator->validateByFields([
+            'article_id' => $id
+        ]);
+
+        if (!$validator->success) {
+            redirect(ROOT . '?msg=' . urlencode($validator->errors['article_id']));
         }
+        ///////////////////////////////////////////////////
         $mUsers = new Users($db, $validator); // validator may cause error!
         $mAuth = new Authorization($mUsers);
 
@@ -79,13 +84,21 @@ class Articles extends Base
 
         $validator = new Validator();
         $mUsers = new Users($db, $validator);
+
+        var_dump($validator);
+
         $mAuth = new Authorization($mUsers);
+
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
         $mArticles = new \model\Articles($db, $validator);
+
+        var_dump($validator);
+        die;
+
         if (!$mArticles::checkId($id)) {
             redirect(ROOT . '?msg=' . urlencode($mArticles::$lastError));
         }

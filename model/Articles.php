@@ -9,18 +9,21 @@ class Articles extends Base
 {
     private const SCHEMA = [
         'article_id' => [
-            'type' => 'int'
+            'type' => Validator::TYPE_INT
         ],
         'title' => [
-            'type' => 'string',
+            'required' => true,
+            'required_message' => 'Article name must be not empty!',
+
+            'type' => Validator::TYPE_STRING,
+
             'length' => [8, 64],
+            'length_message' => 'Title length must be between 8 and 64 characters!'
         ],
-//        'preview' => [
-//            ''
-//        ],
         'content' => [
-            'type' => 'string',
-            'length' => [8],
+            'required' => true,
+            'type' => Validator::TYPE_STRING,
+            'length' => [8, 65535],
         ]
     ];
 
@@ -42,8 +45,9 @@ class Articles extends Base
     private $joinTable = null;
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        $validator->setSchema(self::SCHEMA);
+//        $validator->setSchema(self::SCHEMA);
         parent::__construct($db, $validator, 'articles', 'article_id');
+        $this->validator->setSchema(self::SCHEMA);
         $this->joinTable = 'users';
     }
 
@@ -117,51 +121,5 @@ class Articles extends Base
     {
         $article['content'] = substr($article['content'], 0, self::CONTENT_PREVIEW_MAX_LENGTH) . '...';
         return self::getRepresentation($article);
-    }
-
-    public static function checkTitle(string $title)
-    {
-        $title = trim($title);
-        $ret = false;
-
-        if ($title == '') {
-            self::$lastError = self::EMPTY_TITLE;
-        } elseif (mb_strlen($title) < self::TITLE_MIN_LEN) {
-            self::$lastError = self::TOO_SHORT_TITLE;
-        } else if (mb_strlen($title) > self::TITLE_MAX_LEN) {
-            self::$lastError = self::TOO_LONG_TITLE;
-        } else {
-            $ret = true;
-        }
-        return $ret;
-    }
-
-    public static function checkContent(string $content)
-    {
-        $content = trim($content);
-        if ($content == '') {
-            self::$lastError = self::EMPTY_CONTENT;
-            return false;
-        }
-        if (mb_strlen($content) < self::CONTENT_MIN_LEN) {
-            self::$lastError = self::TOO_SHORT_CONTENT;
-            return false;
-        }
-        return true;
-    }
-
-    public static function checkId($id)
-    {
-        if (empty($id)) {
-            self::$lastError = self::ARTICLE_ID_NOT_TRANSFERRED;
-            return false;
-        }
-
-        if (!preg_match("/^[0-9]+$/", $id)) {
-            self::$lastError = self::ARTICLE_ID_INVALID;
-            return false;
-        }
-
-        return true;
     }
 }

@@ -29,6 +29,7 @@ class DBDriver implements DBDriverInterface
 
         $errorInfo = $statement->errorInfo();
         if ($errorInfo[0] !== PDO::ERR_NONE) {
+            var_dump($errorInfo[2]);
             exit(self::DB_FATAL_ERROR_MSG);
 //        save to logs     exit($errorInfo[2]);
         }

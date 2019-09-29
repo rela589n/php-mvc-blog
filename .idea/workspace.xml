@@ -86,12 +86,16 @@
     <property name="DatabaseDriversLRU" value="mysql.8&#10;mysql" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/view/header_menu" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/core/exceptions" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="xpath.settings" />
   </component>
   <component name="RecentsManager">
+    <key name="OPEN_URL_DIALOG">
+      <recent name="http://192.168.1.1/admin/index.html#/home" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
       <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
@@ -108,6 +112,11 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="1+2=" />
+      <command value="1+23" />
+      <command value="echo 1" />
+      <command value="open vakhtang" />
+      <command value="git status" />
+      <command value="open test" />
     </option>
   </component>
   <component name="RunDashboard">
@@ -121,6 +130,16 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Base.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/model/Base.php">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="PHP Script.Base.php" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="allServicesViewState">
@@ -199,6 +218,10 @@
       <workItem from="1569340883769" duration="2882000" />
       <workItem from="1569381865571" duration="2804000" />
       <workItem from="1569476534176" duration="3280000" />
+      <workItem from="1569560956200" duration="1603000" />
+      <workItem from="1569577571943" duration="933000" />
+      <workItem from="1569672551160" duration="8904000" />
+      <workItem from="1569770597585" duration="6473000" />
     </task>
     <servers />
   </component>
