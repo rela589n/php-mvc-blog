@@ -39,6 +39,8 @@ class Validator
         }
 
         foreach ($fields as $name => $val) {
+            $rules = $this->schema[$name];
+            
             if (
                 $this->validateRequired($name, $fields, $rules) &&
 
