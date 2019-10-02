@@ -4,11 +4,32 @@
 namespace model;
 
 use core\DBDriverInterface;
+use core\exceptions\IncorrectDataException;
+use core\exceptions\NotFoundException;
+use core\Validator;
 
 class Articles extends Base
 {
+    const EMPTY_TITLE = 'Внимание! Название статьи не может быть пустым!';
+    const TITLE_MIN_LEN = 8;
+    const TITLE_MAX_LEN = 64;
+    const TOO_SHORT_TITLE = 'Заголовок слишком короткий! Минимальная длина = ' . self::TITLE_MIN_LEN;
+    const TOO_LONG_TITLE = 'Заголовок слишком длинный! Максимальная длина = ' . self::TITLE_MAX_LEN;
+
+    const EMPTY_CONTENT = 'Внимание! Заполните контент статьи!';
+    const CONTENT_MIN_LEN = 8;
+    const TOO_SHORT_CONTENT = 'Контент слишком короткий! Минимальная длина = ' . self::CONTENT_MIN_LEN;
+
+    const ARTICLE_ID_NOT_TRANSFERRED = 'Внимание! Не передано идентификатор статьи!';
+    const ARTICLE_ID_INVALID = 'Внимание! Передано невалидный идентификатор статьи!';
+    const DEFAULT_ARTICLE_OWNER = 'Anonymous';
+    const CONTENT_PREVIEW_MAX_LENGTH = 20;
+
     private const SCHEMA = [
         'article_id' => [
+            'type' => Validator::TYPE_INT
+        ],
+        'id_user' => [
             'type' => Validator::TYPE_INT
         ],
         'title' => [
@@ -27,22 +48,8 @@ class Articles extends Base
         ]
     ];
 
-    const EMPTY_TITLE = 'Внимание! Название статьи не может быть пустым!';
-    const TITLE_MIN_LEN = 8;
-    const TITLE_MAX_LEN = 64;
-    const TOO_SHORT_TITLE = 'Заголовок слишком короткий! Минимальная длина = ' . self::TITLE_MIN_LEN;
-    const TOO_LONG_TITLE = 'Заголовок слишком длинный! Максимальная длина = ' . self::TITLE_MAX_LEN;
-
-    const EMPTY_CONTENT = 'Внимание! Заполните контент статьи!';
-    const CONTENT_MIN_LEN = 8;
-    const TOO_SHORT_CONTENT = 'Контент слишком короткий! Минимальная длина = ' . self::CONTENT_MIN_LEN;
-
-    const ARTICLE_ID_NOT_TRANSFERRED = 'Внимание! Не передано идентификатор статьи!';
-    const ARTICLE_ID_INVALID = 'Внимание! Передано невалидный идентификатор статьи!';
-    const DEFAULT_ARTICLE_OWNER = 'Anonymous';
-    const CONTENT_PREVIEW_MAX_LENGTH = 20;
-
     private $joinTable = null;
+
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
 //        $validator->setSchema(self::SCHEMA);
@@ -65,7 +72,15 @@ class Articles extends Base
 
     public function getById($id)
     {
-        return $this->db->read(
+        $this->validator->validateByFields([
+            $this->idAlias => $id
+        ]);
+
+        if (!$this->validator->success) {
+            throw new NotFoundException();
+        }
+
+        $r = $this->db->read(
             sprintf(
                 'select %1$s.*, %2$s.user_name from %1$s left join %2$s on %1$s.id_user = %2$s.id_user where %3$s = :id',
                 $this->tableName,
@@ -77,19 +92,46 @@ class Articles extends Base
                 'id' => $id
             ]
         );
+        if (!$r) {
+            throw new NotFoundException();
+        }
+        return $r;
     }
 
     public function insert(string $title, string $content, int $userId)
     {
-        return $this->db->create($this->tableName, [
+        $fields = [
             'title' => $title,
             'content' => $content,
             'id_user' => $userId
-        ]);
+        ];
+        $this->validator->validateByFields($fields);
+
+        if (!$this->validator->success) {
+            throw new IncorrectDataException(
+                $this->validator->errors,
+                'Invalid params given to insert method'
+            );
+        }
+
+        return $this->db->create($this->tableName, $fields);
     }
 
     public function update($id, string $title, string $content)
     {
+        $this->validator->validateByFields([
+            'article_id' => $id,
+            'title' => $title,
+            'content' => $content
+        ]);
+
+        if (!$this->validator->success) {
+            throw new IncorrectDataException(
+                $this->validator->errors,
+                'Invalid params given to update method'
+            );
+        }
+
         return $this->db->update(
             $this->tableName,
             [

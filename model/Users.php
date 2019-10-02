@@ -5,6 +5,8 @@ namespace model;
 
 
 use core\DBDriverInterface;
+use core\exceptions\IncorrectDataException;
+use core\Validator;
 
 class Users extends Base
 {
@@ -28,6 +30,8 @@ class Users extends Base
         'user_name' => [
             'type' => 'string',
             'length' => [4, 64],
+            'preg_match' => '/^[0-9a-z_\-]+$/i',
+//            'preg_match_message' => self::INVALID_USERNAME,
             'required' => true
         ],
         'password' => [
@@ -44,12 +48,24 @@ class Users extends Base
 
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
-        $validator->setSchema(self::SCHEMA);
         parent::__construct($db, $validator, 'users', 'id_user');
+        $this->validator->setSchema(self::SCHEMA);
     }
 
     public function insert(string $userName, string $password)
     {
+        $this->validator->validateByFields([
+            'user_name' => $userName,
+            'password' => $password
+        ]);
+
+        if (!$this->validator->success) {
+            throw new IncorrectDataException(
+                $this->validator->errors,
+                'Insert failed. Invalid params given.'
+            );
+        }
+
         return $this->db->create($this->tableName, [
             'user_name' => $userName,
             'password' => self::hashSha512($password)
@@ -63,7 +79,11 @@ class Users extends Base
 
     public function exists(string $userName)
     {
-        return boolval(
+        $this->validator->validateByFields([
+            'user_name' => $userName
+        ]);
+
+        return $this->validator->success && boolval(
             $this->db->read(
                 "select exists(select id_user from {$this->tableName} where user_name = :user) as user_exist",
                 $this->db::FETCH_ONE,
@@ -72,7 +92,6 @@ class Users extends Base
                 ]
             )['user_exist']
         );
-
     }
 
     public function getByName(string $userName)
@@ -84,37 +103,5 @@ class Users extends Base
                 'user' => $userName
             ]
         );
-    }
-
-    public function checkPasswords(string $password, string $re_password)
-    {
-        if (mb_strlen($password) < self::PASSWORD_MIN_LENGTH) {
-            self::$lastError = self::TOO_SHORT_PASSWORD;
-            return false;
-        }
-        if ($password !== $re_password) {
-            self::$lastError = self::PASSWORDS_NOT_IDENTICAL;
-            return false;
-        }
-        return true;
-    }
-
-    public function checkUserName(string $name)
-    {
-        if (strlen($name) < self::USER_NAME_MIN_LENGTH) {
-            self::$lastError = self::TOO_SHORT_USER_NAME;
-        }
-
-        if (!preg_match(self::VALID_USER_NAME_PATTERN, $name)) {
-            self::$lastError = self::INVALID_USERNAME;
-            return false;
-        }
-
-        if (self::exists($name)) {
-            self::$lastError = self::USER_ALREADY_EXISTS;
-            return false;
-        }
-
-        return true;
     }
 }

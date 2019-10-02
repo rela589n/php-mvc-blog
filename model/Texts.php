@@ -5,7 +5,7 @@ namespace model;
 
 
 use core\DBDriverInterface;
-use PDO;
+use core\Validator;
 
 class Texts extends Base
 {

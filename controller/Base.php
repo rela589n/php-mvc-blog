@@ -6,15 +6,16 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
+use core\exceptions\NotFoundException;
 use model\Authorization;
 use model\Texts;
 use model\Users;
-use model\Validator;
+use core\Validator;
 
 abstract class Base
 {
 
-    protected $title;
+    protected $title = '';
     protected $menu;
     protected $sidebar;
     protected $content;
@@ -23,7 +24,7 @@ abstract class Base
     protected $error404 = null;
 
     protected $mainTemplate = 'v_main.php';
-    protected $error404Template = '404.php';
+    protected $error404Template = 'v_not_found.php';
 
     public function render()
     {
@@ -78,5 +79,10 @@ abstract class Base
         ob_start();
         self::printTemplate($template, $vars);
         return ob_get_clean();
+    }
+
+    public function __call($name, $arguments)
+    {
+        throw new NotFoundException();
     }
 }

@@ -9,7 +9,7 @@ use core\DBDriver;
 use model\Authorization;
 use model\Texts;
 use model\Users;
-use model\Validator;
+use core\Validator;
 
 class Dashboard extends Base
 {

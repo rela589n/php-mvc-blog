@@ -3,13 +3,24 @@
         Username:<br>
         <input type="text" name="name" value="<?= $userName ?>">
     </label>
-
+    <? if (isset($errors['user_name'])): ?>
+        <div class="red">
+            <?= $errors['user_name'] ?>
+        </div>
+        <br>
+    <? endif; ?>
     <br>
     <label>
         Password:<br>
         <input type="password" name="password" value="<?= $password ?>">
     </label>
 
+    <? if (isset($errors['password'])): ?>
+        <div class="red">
+            <?= $errors['password'] ?>
+        </div>
+        <br>
+    <? endif; ?>
     <br>
     <label>
         Remember me

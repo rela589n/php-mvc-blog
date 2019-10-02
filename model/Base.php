@@ -4,14 +4,14 @@ namespace model;
 
 use core\DBDriverInterface;
 use core\exceptions\IncorrectDataException;
-use core\exceptions\ValidatorException;
+use core\Validator;
 
 abstract class Base
 {
     protected $db;
     protected $tableName;
     protected $idAlias;
-    protected $validator;
+    public $validator;
 
     public static $lastError = '';
 

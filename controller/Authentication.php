@@ -8,7 +8,7 @@ use core\DBConnector;
 use core\DBDriver;
 use model\Authorization;
 use model\Users;
-use model\Validator;
+use core\Validator;
 
 class Authentication extends Base
 {
@@ -20,15 +20,22 @@ class Authentication extends Base
         $mUsers = new Users($db, $validator);
         $mAuth = new Authorization($mUsers);
         $msg = '';
+        $errors = null;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $userName = secure_data($_POST['name']);
             $password = secure_data($_POST['password']);
             $remember = isset($_POST['remember']);
 
-            if (!$userName || !$password) {
-                $msg = FILL_IN_ALL_FIELDS;
-            } elseif (!$mAuth->authorize($userName, $password, $remember)) {
+            $validator->validateByFields([
+                'user_name' => $userName,
+                'password' => $password
+            ]);
+
+            if (!$validator->success) {
+                $errors = $validator->errors;
+            }
+            elseif (!$mAuth->authorize($userName, $password, $remember)) {
                 $msg = INVALID_LOGIN_OR_PASSWORD;
             } else {
                 if (isset($_SESSION['back_redirect'])) {
@@ -51,6 +58,7 @@ class Authentication extends Base
         $this->content = self::getTemplate('v_login.php', [
             'userName' => $userName,
             'password' => $password,
+            'errors' => $errors,
             'message' => $msg
         ]);
     }
@@ -74,8 +82,14 @@ class Authentication extends Base
                 're_password' => $rePassword
             ]);
 
+            if ($validator->success && $mUsers->exists($userName)) {
+                $validator->appendErrors([
+                    'user_name' => $mUsers::USER_ALREADY_EXISTS
+                ]);
+                $validator->success = false;
+            }
+
             if (!$validator->success) {
-//                var_dump($validator->errors);
                 $errors = $validator->errors;
             }
             else {

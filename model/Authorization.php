@@ -79,6 +79,4 @@ class Authorization
     {
         return $userName === self::ADMIN_LOGIN && $this->isAuth();
     }
-
-
 }

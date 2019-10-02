@@ -6,9 +6,10 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
+use core\exceptions\NotFoundException;
 use model\Authorization;
 use model\Users;
-use model\Validator;
+use core\Validator;
 
 class Articles extends Base
 {
@@ -44,39 +45,23 @@ class Articles extends Base
     public function singleAction($id)
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $validator = new Validator();
-        $mArticles = new \model\Articles($db, $validator);
-
-        $validator->validateByFields([
-            'article_id' => $id
-        ]);
-
-        if (!$validator->success) {
-            redirect(ROOT . '?msg=' . urlencode($validator->errors['article_id']));
-        }
-        ///////////////////////////////////////////////////
-        $mUsers = new Users($db, $validator); // validator may cause error!
-        $mAuth = new Authorization($mUsers);
-
-        $this->sidebar = self::getTemplate( 'sidebar/v_sidebar_short.php');
+        $mArticles = new \model\Articles($db, new Validator());
 
         $article = $mArticles->getById($id);
-        if (!$article) {
-            $this->error404 = [
-                'message' => ARTICLE_NOT_FOUND,
-                'title' => TITLE_404
-            ];
-        } else {
-            $article = $mArticles::getRepresentation($article);
-            $this->content = self::getTemplate('articles/v_article.php', [
-                'article' => $article,
-                'isAuth' => $mAuth->isAuth(),
-                'isOwner' => $mAuth->isAuth() &&
-                    ($mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) ||
-                        $article['id_user'] == $_SESSION[$mAuth::SESSION_USER_ID_KEY])
-            ]);
-            $this->title = $article['title'];
-        }
+        $article = $mArticles::getRepresentation($article);
+
+        $mAuth = new Authorization(new Users($db, new Validator()));
+
+        $this->content = self::getTemplate('articles/v_article.php', [
+            'article' => $article,
+            'isAuth' => $mAuth->isAuth(),
+            'isOwner' => $mAuth->isAuth() &&
+                ($mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) ||
+                    $article['id_user'] == $_SESSION[$mAuth::SESSION_USER_ID_KEY])
+        ]);
+        $this->title = $article['title'];
+
+        $this->sidebar = self::getTemplate( 'sidebar/v_sidebar_short.php');
     }
 
     public function editAction($id) {

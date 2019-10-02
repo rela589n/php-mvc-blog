@@ -1,8 +1,7 @@
 <?php
 
 
-namespace model;
-
+namespace core;
 
 use core\exceptions\ValidatorException;
 
@@ -40,7 +39,7 @@ class Validator
 
         foreach ($fields as $name => $val) {
             $rules = $this->schema[$name];
-            
+
             if (
                 $this->validateRequired($name, $fields, $rules) &&
 
@@ -119,7 +118,7 @@ class Validator
         return ($minLen <= $currentLen) && ($currentLen <= $maxLen);
     }
 
-    protected function validateType(string $fieldName, string $field, array &$rules)
+    protected function validateType(string $fieldName, $field, array &$rules)
     {
         if (!isset($rules['type'])) {
             return true;
@@ -206,5 +205,10 @@ class Validator
         }
 
         return $r;
+    }
+
+    public function appendErrors(array $errors)
+    {
+        $this->errors = array_merge($this->errors, $errors);
     }
 }
