@@ -6,7 +6,8 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
-use core\exceptions\NotFoundException;
+use core\exceptions\DataBaseException;
+use core\exceptions\IncorrectDataException;
 use model\Authorization;
 use model\Users;
 use core\Validator;
@@ -18,10 +19,9 @@ class Articles extends Base
         $this->title = 'All articles';
 
         $db = new DBDriver(DBConnector::getPdo());
-        $validator = new Validator();
 
-        $mArticles = new \model\Articles($db, $validator);
-        $mUsers = new Users($db, $validator);
+        $mArticles = new \model\Articles($db, new Validator());
+        $mUsers = new Users($db, new Validator());
         $mAuth = new Authorization($mUsers);
 
         $articles = $mArticles->getAll();
@@ -52,6 +52,7 @@ class Articles extends Base
 
         $mAuth = new Authorization(new Users($db, new Validator()));
 
+        $this->title = $article['title'];
         $this->content = self::getTemplate('articles/v_article.php', [
             'article' => $article,
             'isAuth' => $mAuth->isAuth(),
@@ -59,55 +60,45 @@ class Articles extends Base
                 ($mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) ||
                     $article['id_user'] == $_SESSION[$mAuth::SESSION_USER_ID_KEY])
         ]);
-        $this->title = $article['title'];
 
-        $this->sidebar = self::getTemplate( 'sidebar/v_sidebar_short.php');
+        $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
     }
 
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $db = new DBDriver(DBConnector::getPdo());
-
-        $validator = new Validator();
-        $mUsers = new Users($db, $validator);
-
-        var_dump($validator);
-
-        $mAuth = new Authorization($mUsers);
+        $mAuth = new Authorization(new Users($db, new Validator()));
 
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
-        $mArticles = new \model\Articles($db, $validator);
-
-        var_dump($validator);
-        die;
-
-        if (!$mArticles::checkId($id)) {
-            redirect(ROOT . '?msg=' . urlencode($mArticles::$lastError));
-        }
+        $mArticles = new \model\Articles($db, new Validator());
 
         $msg = '';
+        $errors = null;
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $articleTitle = secure_data($_POST['title']);
             $articleContent = secure_data($_POST['content']);
 
             if (!isset($_SESSION['edit_id']) || $_SESSION['edit_id'] != $id) {
                 $msg = PERMISSION_DENIED_ERROR;
-            } elseif (!($mArticles::checkTitle($articleTitle) && $mArticles::checkContent($articleContent))) {
-                $msg = $mArticles::$lastError;
             } else {
-                unset($_SESSION['edit_id']);
-
-                if ($mArticles->update( $id, $articleTitle, $articleContent)) {
+                try {
+                    $mArticles->update($id, $articleTitle, $articleContent);
+                    unset($_SESSION['edit_id']);
                     redirect(ROOT . "article/$id/");
-                } else {
+                }
+                catch (IncorrectDataException $e) {
+                    $msg = $e->getMessage();
+                    $errors = $e->getErrors();
+                }
+                catch (DataBaseException $e) {
                     redirect(ROOT . '?msg=' . urlencode(ARTICLE_SAVE_ERROR));
                 }
             }
-        } else {
+        } else { // GET
             $article = $mArticles->getById($id);
 
             if (!$mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) &&
@@ -115,64 +106,49 @@ class Articles extends Base
                 redirect(ROOT . '?msg=' . urlencode(EDIT_DENIED));
             }
 
-            if (!$article) {
-                $this->error404 = [
-                    'message' => ARTICLE_NOT_FOUND,
-                    'title' => TITLE_404
-                ];
-            } else {
-                $_SESSION['edit_id'] = $id;
-                $articleTitle = $article['title'];
-                $articleContent = $article['content'];
-            }
+            $_SESSION['edit_id'] = $id;
+            $articleTitle = $article['title'];
+            $articleContent = $article['content'];
         }
+
+        $this->title = 'Edit - ' . $articleTitle;
+        $this->content = self::getTemplate('v_edit.php', [
+            'title' => $articleTitle,
+            'content' => $articleContent,
+            'message' => $msg,
+            'errors' => $errors
+        ]);
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
-
-        if (!$this->error404){
-            $this->content = self::getTemplate('v_edit.php', [
-                'title' => $articleTitle,
-                'content' => $articleContent,
-                'message' => $msg
-            ]);
-            $this->title = 'Edit - ' . $articleTitle;
-        }
-
     }
 
-    public function addAction($id) {
+    public function addAction($id)
+    {
         $db = new DBDriver(DBConnector::getPdo());
-
-        $validator = new Validator();
-        $mUsers = new Users($db, $validator);
+        $mUsers = new Users($db, new Validator());
         $mAuth = new Authorization($mUsers);
-        if (!$mAuth->isAuth()){
+
+        if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
         }
 
-        $mArticle = new \model\Articles($db, $validator);
+        $mArticle = new \model\Articles($db, new Validator());
         $msg = '';
-        $articleTitle = '';
-        $articleContent = '';
+        $title = '';
+        $content = '';
+        $errors = null;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $articleTitle = secure_data($_POST['title']);
-            $articleContent = secure_data($_POST['content']);
+            $title = secure_data($_POST['title']);
+            $content = secure_data($_POST['content']);
 
-            if (!($mArticle::checkTitle($articleTitle) && $mArticle::checkContent($articleContent))) {
-                $msg = $mArticle::$lastError;
-            }
-            else {
-                if ($insertId = $mArticle->insert(
-                    $articleTitle,
-                    $articleContent,
-                    $_SESSION[$mAuth::SESSION_USER_ID_KEY])) {
-                    redirect(ROOT . "article/$insertId/");
-                }
-                else {
-                    $msg = ARTICLE_SAVE_ERROR;
-                }
+            try {
+                $insertId = $mArticle->insert($title, $content, $_SESSION[$mAuth::SESSION_USER_ID_KEY]);
+                redirect(ROOT . "article/$insertId/");
+            } catch (IncorrectDataException $e) {
+                $msg = $e->getMessage() ?: ARTICLE_SAVE_ERROR;
+                $errors = $e->getErrors();
             }
         }
 
@@ -183,14 +159,12 @@ class Articles extends Base
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
 
         $this->content = self::getTemplate('v_add.php', [
-            'title' => $articleTitle,
-            'content' => $articleContent,
-            'message' => $msg
+            'title' => $title,
+            'content' => $content,
+            'message' => $msg,
+            'errors' => $errors
         ]);
 
         $this->title = ADD_ARTICLE_TITLE;
-
     }
-
-
 }

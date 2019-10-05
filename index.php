@@ -4,6 +4,7 @@ include_once 'config.php';
 
 use controller\NotFound;
 use core\exceptions\NotFoundException;
+use model\Users;
 
 spl_autoload_register(function ($classPath) {
     $classPath = str_replace('\\', '/', $classPath);

@@ -35,8 +35,7 @@ abstract class Base
             $this->title = $this->error404['title'] ?? TITLE_404;
         }
         if (!isset($this->menu)) {
-            $validator = new Validator();
-            $mUsers = new Users(new DBDriver(DBConnector::getPdo()), $validator);
+            $mUsers = new Users(new DBDriver(DBConnector::getPdo()), new Validator());
             $mAuth = new Authorization($mUsers);
 
             $this->menu = self::getTemplate('header_menu/v_main.php', [
@@ -48,8 +47,7 @@ abstract class Base
         }
 
         if (!isset($this->footer)) {
-            $validator = new Validator();
-            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()), $validator);
+            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()), new Validator());
             $this->footer = self::getTemplate('v_footer.php', [
                 'title1' => $mTexts->getOne('footer_1'),
                 'title2' => $mTexts->getOne('footer_2'),

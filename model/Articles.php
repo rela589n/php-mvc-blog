@@ -34,7 +34,7 @@ class Articles extends Base
         ],
         'title' => [
             'required' => true,
-            'required_message' => 'Article name must be not empty!',
+            'required_message' => 'Article name must not be empty!',
 
             'type' => Validator::TYPE_STRING,
 
@@ -98,7 +98,7 @@ class Articles extends Base
         return $r;
     }
 
-    public function insert(string $title, string $content, int $userId)
+    public function insert(string $title, string $content, $userId)
     {
         $fields = [
             'title' => $title,

@@ -93,7 +93,10 @@ class DBDriver implements DBDriverInterface
 
         $statement = $this->db->prepare($sql);
         $statement->execute(array_merge($setParams, $whereParams));
-        self::checkErrors($statement);
+
+        if (!self::checkErrors($statement)) {
+            return false;
+        }
 
         return $statement->rowCount();
     }

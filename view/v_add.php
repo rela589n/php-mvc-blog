@@ -4,11 +4,23 @@
         Название<br>
         <input type="text" name="title" value="<?= $title ?>">
     </label><br>
+    <? if (isset($errors['title'])): ?>
+        <div class="red">
+            <?= $errors['title'] ?>
+        </div>
+        <br>
+    <? endif; ?>
 
     <label>
         Контент<br>
         <textarea name="content"><?= $content ?></textarea>
     </label><br>
+    <? if (isset($errors['content'])): ?>
+        <div class="red">
+            <?= $errors['content'] ?>
+        </div>
+        <br>
+    <? endif; ?>
 
     <input type="submit" value="Добавить">
 </form>

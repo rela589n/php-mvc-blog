@@ -126,7 +126,7 @@ class Validator
 
         switch ($rules['type']) {
             case self::TYPE_INT:
-                if (!ctype_digit($field)) {
+                if (!(is_int($field) || ctype_digit($field))) {
                     $this->errors[$fieldName] = ($rules['type_message']) ??
                         sprintf('Field %s must be int!', $fieldName);
 

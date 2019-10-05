@@ -7,18 +7,26 @@
 +3. models accept validator and set for him proper rules
 
 +6. validation capabilities: (required, length, preg_match, type, equals_to)
-+7. create validation method
++7. create validation method Allow,
     +7.1 create method checkLength
     +7.2 create method checkType
 8.
 
 /** Exception handling **/
 +0. Validation into Validator
-1. add 404 page controller
++1. add 404 page controller
     - base controller method __call
     - in other controllers when read method return null result set
     -
 2. create class ModelException
-3. create class InvalidDataException
-4. create class ValidatorException
-5. add handling undefined method calling
++3. create class InvalidDataException
++4. create class ValidatorException
++5. add handling undefined method calling
+
+
+
++1. Articles "edit" action
+2. Articles "add" action with validator
+3. Rewrite users register & index actions in users model. Move validation from controller into model
+4. Authentication: move validation into model
+change views for errors handling

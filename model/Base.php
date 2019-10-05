@@ -13,8 +13,6 @@ abstract class Base
     protected $idAlias;
     public $validator;
 
-    public static $lastError = '';
-
     /**
      * BaseModel constructor.
      * @param DBDriverInterface $db
