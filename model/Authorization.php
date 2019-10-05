@@ -4,6 +4,9 @@
 namespace model;
 
 
+use core\exceptions\AuthorizationException;
+use core\exceptions\IncorrectDataException;
+
 class Authorization
 {
     const SESSION_AUTHENTICATED = 'authenticated';
@@ -25,6 +28,15 @@ class Authorization
 
     public function authorize(string $login, string $password, bool $remember = false, int $rememberTime = self::REMEMBER_TIME)
     {
+        $this->userModel->validator->validateByFields([
+            'user_name' => $login,
+            'password' => $password
+        ]);
+
+        if (!$this->userModel->validator->success) {
+            throw new IncorrectDataException($this->userModel->validator->errors);
+        }
+
         $hashPassword = $this->userModel::hashSha512($password);
         $user = $this->userModel->getByName($login);
 
@@ -35,12 +47,15 @@ class Authorization
             $_SESSION[self::SESSION_USER_ID_KEY] = $user['id_user'];
 
             if ($remember) {
-                setcookie(self::COOKIE_REMEMBER_LOGIN_KEY, $login, time() + $rememberTime, ROOT);
-                setcookie(self::COOKIE_REMEMBER_PASSWORD_KEY, $hashPassword, time() + $rememberTime, ROOT);
+                $rememberTime +=time();
+                setcookie(self::COOKIE_REMEMBER_LOGIN_KEY, $login, $rememberTime, ROOT);
+                setcookie(self::COOKIE_REMEMBER_PASSWORD_KEY, $hashPassword, $rememberTime, ROOT);
             }
         }
 
-        return $success;
+        if (!$success) {
+            throw new AuthorizationException();
+        }
     }
 
     public static function deauthorize()

@@ -52,14 +52,23 @@ class Users extends Base
         $this->validator->setSchema(self::SCHEMA);
     }
 
-    public function insert(string $userName, string $password)
+    public function register(string $userName, string $password, string $rePassword)
     {
-        $this->validator->validateByFields([
+        $validator = &$this->validator;
+        $validator->validateByFields([
             'user_name' => $userName,
-            'password' => $password
+            'password' => $password,
+            're_password' => $rePassword
         ]);
 
-        if (!$this->validator->success) {
+        if ($validator->success && $this->exists($userName)) {
+            $validator->appendErrors([
+                'user_name' => self::USER_ALREADY_EXISTS
+            ]);
+            $validator->success = false;
+        }
+
+        if (!$validator->success) {
             throw new IncorrectDataException(
                 $this->validator->errors,
                 'Insert failed. Invalid params given.'

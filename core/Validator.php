@@ -10,9 +10,9 @@ class Validator
     protected $schema = null;
     protected $length = []; // [min, max, current] for string validation
 
-    public $success;
-    public $errors;
-    public $clear; // successful validated fields
+    public $success = false;
+    public $errors = [];
+    public $clear = []; // successful validated fields
 
 
     public const TYPE_INT = 'int';
@@ -29,10 +29,6 @@ class Validator
 
     public function validateByFields(array $fields)
     {
-        $this->errors = [];
-        $this->clear = [];
-        $this->success = false;
-
         if ($this->schema == null) {
             throw new ValidatorException('Schema is not set in validator!');
         }
@@ -53,9 +49,7 @@ class Validator
             }
         }
 
-        if (empty($this->errors)) {
-            $this->success = true;
-        }
+        $this->success = empty($this->errors);
     }
 
     public function validateBySchema(array $fields)

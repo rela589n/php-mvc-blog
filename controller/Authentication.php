@@ -6,6 +6,8 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
+use core\exceptions\AuthorizationException;
+use core\exceptions\IncorrectDataException;
 use model\Authorization;
 use model\Users;
 use core\Validator;
@@ -14,34 +16,30 @@ class Authentication extends Base
 {
     public function indexAction()
     {
-        $db = new DBDriver( DBConnector::getPdo());
+        $db = new DBDriver(DBConnector::getPdo());
 
-        $validator = new Validator();
-        $mUsers = new Users($db, $validator);
+        $mUsers = new Users($db, new Validator());
         $mAuth = new Authorization($mUsers);
+
         $msg = '';
         $errors = null;
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $userName = secure_data($_POST['name']);
             $password = secure_data($_POST['password']);
             $remember = isset($_POST['remember']);
 
-            $validator->validateByFields([
-                'user_name' => $userName,
-                'password' => $password
-            ]);
-
-            if (!$validator->success) {
-                $errors = $validator->errors;
-            }
-            elseif (!$mAuth->authorize($userName, $password, $remember)) {
-                $msg = INVALID_LOGIN_OR_PASSWORD;
-            } else {
-                $redirect= $_SESSION['back_redirect'] ?? ROOT . 'dashboard/';
+            $errors = null;
+            try {
+                $mAuth->authorize($userName, $password, $remember);
+                $redirect = $_SESSION['back_redirect'] ?? ROOT . 'dashboard/';
                 unset($_SESSION['back_redirect']);
 
                 redirect($redirect);
+            } catch (IncorrectDataException $e) {
+                $msg = $e->getMessage();
+                $errors = $e->getErrors();
+            } catch (AuthorizationException $e) {
+                $msg = INVALID_LOGIN_OR_PASSWORD;
             }
         } else {
             $mAuth::deauthorize();
@@ -63,8 +61,7 @@ class Authentication extends Base
     public function registerAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $validator = new Validator();
-        $mUsers = new Users($db, $validator);
+        $mUsers = new Users($db, new Validator());
         $msg = '';
         $errors = null;
 
@@ -73,26 +70,14 @@ class Authentication extends Base
             $password = secure_data($_POST['password']);
             $rePassword = secure_data($_POST['re_password']);
 
-            $validator->validateByFields([
-                'user_name' => $userName,
-                'password' => $password,
-                're_password' => $rePassword
-            ]);
-
-            if ($validator->success && $mUsers->exists($userName)) {
-                $validator->appendErrors([
-                    'user_name' => $mUsers::USER_ALREADY_EXISTS
-                ]);
-                $validator->success = false;
-            }
-
-            if (!$validator->success) {
-                $errors = $validator->errors;
-            }
-            else {
-                $mUsers->insert($userName, $password);
+            try {
+                $mUsers->register($userName, $password, $rePassword);
                 redirect(ROOT . 'auth/?msg=' . urlencode($mUsers::REGISTRATION_SUCCESSFUL));
+            } catch (IncorrectDataException $e) {
+                $errors = $e->getErrors();
+                $msg = $e->getMessage();
             }
+
         } else {
             $msg = '';
             $userName = $password = $rePassword = '';
@@ -109,6 +94,4 @@ class Authentication extends Base
             'message' => $msg
         ]);
     }
-
-
 }
