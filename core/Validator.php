@@ -27,6 +27,11 @@ class Validator
         $this->schema = $schema;
     }
 
+    /**
+     * @param array $fields
+     * @return $this
+     * @throws ValidatorException
+     */
     public function validateByFields(array $fields)
     {
         if ($this->schema == null) {
@@ -50,6 +55,7 @@ class Validator
         }
 
         $this->success = empty($this->errors);
+        return $this;
     }
 
     public function validateBySchema(array $fields)
@@ -80,6 +86,7 @@ class Validator
         if (empty($this->errors)) {
             $this->success = true;
         }
+        return $this;
     }
 
     protected function checkLength(string $field, $length)

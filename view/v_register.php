@@ -25,12 +25,12 @@
     <br>
     <label>
         Repeat Password:<br>
-        <input type="password" name="re_password" value="<?= $second_password ?>">
+        <input type="password" name="password_confirm" value="<?= $second_password ?>">
     </label>
 
-    <? if (isset($errors['re_password'])): ?>
+    <? if (isset($errors['password_confirm'])): ?>
         <div class="red">
-            <?= $errors['re_password'] ?>
+            <?= $errors['password_confirm'] ?>
         </div>
         <br>
     <? endif; ?>

@@ -37,7 +37,7 @@ class Authorization
             throw new IncorrectDataException($this->userModel->validator->errors);
         }
 
-        $hashPassword = $this->userModel::hashSha512($password);
+        $hashPassword = $this->userModel::hashPassword($password);
         $user = $this->userModel->getByName($login);
 
         $success = $user && $user['password'] === $hashPassword;
@@ -47,14 +47,14 @@ class Authorization
             $_SESSION[self::SESSION_USER_ID_KEY] = $user['id_user'];
 
             if ($remember) {
-                $rememberTime +=time();
+                $rememberTime += time();
                 setcookie(self::COOKIE_REMEMBER_LOGIN_KEY, $login, $rememberTime, ROOT);
                 setcookie(self::COOKIE_REMEMBER_PASSWORD_KEY, $hashPassword, $rememberTime, ROOT);
             }
         }
 
         if (!$success) {
-            throw new AuthorizationException();
+            throw new AuthorizationException('Invalid login or password!');
         }
     }
 

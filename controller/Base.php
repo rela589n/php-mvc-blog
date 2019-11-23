@@ -6,7 +6,9 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
+
 use core\exceptions\NotFoundException;
+use core\Request;
 use model\Authorization;
 use model\Texts;
 use model\Users;
@@ -21,21 +23,22 @@ abstract class Base
     protected $content;
     protected $footer;
     protected $message;
-    protected $error404 = null;
-
     protected $mainTemplate = 'v_main.php';
-    protected $error404Template = 'v_not_found.php';
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     public function render()
     {
-        if (isset($this->error404)) {
-            $this->content = self::getTemplate($this->error404Template, [
-                'message' => $this->error404['message'] ?? ERROR_404
-            ]);
-            $this->title = $this->error404['title'] ?? TITLE_404;
-        }
         if (!isset($this->menu)) {
-            $mUsers = new Users(new DBDriver(DBConnector::getPdo()), new Validator());
+            $mUsers = new Users(
+                new DBDriver(
+                    DBConnector::getPdo()
+                ),
+                new Validator());
             $mAuth = new Authorization($mUsers);
 
             $this->menu = self::getTemplate('header_menu/v_main.php', [

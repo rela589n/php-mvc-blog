@@ -4,6 +4,7 @@ include_once 'config.php';
 
 use controller\NotFound;
 use core\exceptions\NotFoundException;
+use core\Request;
 use model\Users;
 
 spl_autoload_register(function ($classPath) {
@@ -18,7 +19,7 @@ if ($params[$last = count($params) - 1] == '') {
     unset($params[$last]);
     unset($last);
 }
-
+$request = new Request();
 try {
     $controller = $params[0] ?? 'article';
     if (!in_array($controller, array_keys(CONTROLLERS_MAP), true)) {
@@ -40,12 +41,12 @@ try {
 
         $action .= 'Action';
 
-        $controller = new $controller();
+        $controller = new $controller($request);
         $controller->$action($id);
         $controller->render();
     }
 } catch (NotFoundException $e) {
-    $controller = new NotFound();
+    $controller = new NotFound($request);
     $controller->indexAction($e->getMessage());
     $controller->render();
 }

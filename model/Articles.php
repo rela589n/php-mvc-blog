@@ -4,19 +4,21 @@
 namespace model;
 
 use core\DBDriverInterface;
+use core\exceptions\DataBaseException;
 use core\exceptions\IncorrectDataException;
 use core\exceptions\NotFoundException;
+use core\exceptions\ValidatorException;
 use core\Validator;
 
 class Articles extends Base
 {
-    const EMPTY_TITLE = 'Внимание! Название статьи не может быть пустым!';
+    const EMPTY_TITLE = 'Article title must not be empty!';
     const TITLE_MIN_LEN = 8;
     const TITLE_MAX_LEN = 64;
     const TOO_SHORT_TITLE = 'Заголовок слишком короткий! Минимальная длина = ' . self::TITLE_MIN_LEN;
     const TOO_LONG_TITLE = 'Заголовок слишком длинный! Максимальная длина = ' . self::TITLE_MAX_LEN;
 
-    const EMPTY_CONTENT = 'Внимание! Заполните контент статьи!';
+    const EMPTY_CONTENT = 'Your attention, please! Fill article content!';
     const CONTENT_MIN_LEN = 8;
     const TOO_SHORT_CONTENT = 'Контент слишком короткий! Минимальная длина = ' . self::CONTENT_MIN_LEN;
 
@@ -34,7 +36,7 @@ class Articles extends Base
         ],
         'title' => [
             'required' => true,
-            'required_message' => 'Article name must not be empty!',
+            'required_message' => self::EMPTY_TITLE,
 
             'type' => Validator::TYPE_STRING,
 
@@ -43,6 +45,7 @@ class Articles extends Base
         ],
         'content' => [
             'required' => true,
+            'required_message' => self::EMPTY_CONTENT,
             'type' => Validator::TYPE_STRING,
             'length' => [8, 65535],
         ]
@@ -58,6 +61,9 @@ class Articles extends Base
         $this->joinTable = 'users';
     }
 
+    /**
+     * @return mixed
+     */
     public function getAll()
     {
         return $this->db->read(
@@ -70,6 +76,12 @@ class Articles extends Base
 
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     * @throws NotFoundException
+     * @throws ValidatorException
+     */
     public function getById($id)
     {
         $this->validator->validateByFields([
@@ -98,6 +110,14 @@ class Articles extends Base
         return $r;
     }
 
+    /**
+     * @param string $title
+     * @param string $content
+     * @param $userId
+     * @return mixed
+     * @throws IncorrectDataException
+     * @throws ValidatorException
+     */
     public function insert(string $title, string $content, $userId)
     {
         $fields = [
@@ -117,6 +137,15 @@ class Articles extends Base
         return $this->db->create($this->tableName, $fields);
     }
 
+    /**
+     * @param $id
+     * @param string $title
+     * @param string $content
+     * @return mixed
+     * @throws IncorrectDataException
+     * @throws ValidatorException
+     * @throws DataBaseException
+     */
     public function update($id, string $title, string $content)
     {
         $this->validator->validateByFields([
@@ -145,11 +174,19 @@ class Articles extends Base
         );
     }
 
+    /**
+     * @param string $date
+     * @return false|string
+     */
     public static function getArticleDate(string $date)
     {
         return date('F j, Y; H:i', strtotime($date));
     }
 
+    /**
+     * @param array $article
+     * @return array
+     */
     public static function getRepresentation(array $article)
     {
         $article['dt'] = self::getArticleDate($article['dt']);
@@ -159,6 +196,10 @@ class Articles extends Base
         return $article;
     }
 
+    /**
+     * @param $article
+     * @return array
+     */
     public static function getPreviewRepresentation($article)
     {
         $article['content'] = substr($article['content'], 0, self::CONTENT_PREVIEW_MAX_LENGTH) . '...';

@@ -23,10 +23,10 @@ class Authentication extends Base
 
         $msg = '';
         $errors = null;
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $userName = secure_data($_POST['name']);
-            $password = secure_data($_POST['password']);
-            $remember = isset($_POST['remember']);
+        if ($this->request->isPost()) {
+            $userName = secure_data($this->request->post('name'));
+            $password = secure_data( $this->request->post('password'));
+            $remember = $this->request->post('remember');
 
             $errors = null;
             try {
@@ -39,12 +39,15 @@ class Authentication extends Base
                 $msg = $e->getMessage();
                 $errors = $e->getErrors();
             } catch (AuthorizationException $e) {
-                $msg = INVALID_LOGIN_OR_PASSWORD;
+                $msg = $e->getMessage();
             }
-        } else {
+        } else if ($this->request->isGet()) {
             $mAuth::deauthorize();
             $msg = sprintf('%s', urldecode($_GET['msg'] ?? ''));
             $userName = $password = '';
+        }
+        else {
+            throw new \Exception('Application can handle only GET and POST requests');
         }
 
         $this->menu = self::getTemplate('header_menu/v_login_menu.php');
@@ -65,10 +68,10 @@ class Authentication extends Base
         $msg = '';
         $errors = null;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $userName = secure_data($_POST['name']);
-            $password = secure_data($_POST['password']);
-            $rePassword = secure_data($_POST['re_password']);
+        if ($this->request->isPost()) {
+            $userName = secure_data($this->request->post('name'));
+            $password = secure_data($this->request->post('password'));
+            $rePassword = secure_data($this->request->post('password_confirm'));
 
             try {
                 $mUsers->register($userName, $password, $rePassword);
@@ -78,7 +81,7 @@ class Authentication extends Base
                 $msg = $e->getMessage();
             }
 
-        } else {
+        } else if ($this->request->isGet()) {
             $msg = '';
             $userName = $password = $rePassword = '';
         }

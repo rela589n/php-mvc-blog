@@ -3,14 +3,16 @@
 
 namespace controller;
 
-
 use core\DBConnector;
 use core\DBDriver;
 use core\exceptions\DataBaseException;
 use core\exceptions\IncorrectDataException;
+use core\exceptions\NotFoundException;
+use core\exceptions\ValidatorException;
 use model\Authorization;
 use model\Users;
 use core\Validator;
+
 
 class Articles extends Base
 {
@@ -42,6 +44,11 @@ class Articles extends Base
         $this->message = sprintf('"%s"', urldecode($_GET['msg'] ?? ''));
     }
 
+    /**
+     * @param $id
+     * @throws NotFoundException
+     * @throws ValidatorException
+     */
     public function singleAction($id)
     {
         $db = new DBDriver(DBConnector::getPdo());
@@ -64,6 +71,11 @@ class Articles extends Base
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
     }
 
+    /**
+     * @param $id
+     * @throws NotFoundException
+     * @throws ValidatorException
+     */
     public function editAction($id)
     {
         $db = new DBDriver(DBConnector::getPdo());
@@ -78,9 +90,9 @@ class Articles extends Base
 
         $msg = '';
         $errors = null;
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $articleTitle = secure_data($_POST['title']);
-            $articleContent = secure_data($_POST['content']);
+        if ($this->request->isPost()) {
+            $articleTitle = secure_data($this->request->post('title'));
+            $articleContent = secure_data($this->request->post('content'));
 
             if (!isset($_SESSION['edit_id']) || $_SESSION['edit_id'] != $id) {
                 $msg = PERMISSION_DENIED_ERROR;
@@ -89,12 +101,10 @@ class Articles extends Base
                     $mArticles->update($id, $articleTitle, $articleContent);
                     unset($_SESSION['edit_id']);
                     redirect(ROOT . "article/$id/");
-                }
-                catch (IncorrectDataException $e) {
+                } catch (IncorrectDataException $e) {
                     $msg = $e->getMessage();
                     $errors = $e->getErrors();
-                }
-                catch (DataBaseException $e) {
+                } catch (DataBaseException $e) {
                     redirect(ROOT . '?msg=' . urlencode(ARTICLE_SAVE_ERROR));
                 }
             }
@@ -138,10 +148,10 @@ class Articles extends Base
         $content = '';
         $errors = null;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($this->request->isPost()) {
 
-            $title = secure_data($_POST['title']);
-            $content = secure_data($_POST['content']);
+            $title = secure_data($this->request->post('title'));
+            $content = secure_data($this->request->post('content'));
 
             try {
                 $insertId = $mArticle->insert($title, $content, $_SESSION[$mAuth::SESSION_USER_ID_KEY]);

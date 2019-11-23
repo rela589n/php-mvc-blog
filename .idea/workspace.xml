@@ -93,7 +93,7 @@
     <property name="DatabaseDriversLRU" value="mysql.8&#10;mysql" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/core/exceptions" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
@@ -101,19 +101,19 @@
     <key name="OPEN_URL_DIALOG">
       <recent name="http://192.168.1.1/admin/index.html#/home" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\php2\oop-blog" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\core" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\view\v_main" />
       <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view\dashboard\texts" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
+      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
+      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -240,7 +240,13 @@
       <workItem from="1570029737217" duration="7738000" />
       <workItem from="1570090301750" duration="468000" />
       <workItem from="1570179045636" duration="130000" />
-      <workItem from="1570257667678" duration="10013000" />
+      <workItem from="1570257667678" duration="13096000" />
+      <workItem from="1571326641223" duration="1006000" />
+      <workItem from="1571627550167" duration="711000" />
+      <workItem from="1571713298986" duration="803000" />
+      <workItem from="1571760482963" duration="3732000" />
+      <workItem from="1571801893880" duration="784000" />
+      <workItem from="1574491708939" duration="3847000" />
     </task>
     <servers />
   </component>

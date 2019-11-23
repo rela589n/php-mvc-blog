@@ -27,6 +27,6 @@
 
 +1. Articles "edit" action
 +2. Articles "add" action with validator
-3. Rewrite users register & index actions in users model. Move validation from controller into model
-4. Authentication: move validation into model
-change views for errors handling
++3. Rewrite users register & index actions in users model. Move validation from controller into model
++4. Authentication: move validation into model
++change views for errors handling

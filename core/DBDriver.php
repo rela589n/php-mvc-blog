@@ -12,20 +12,20 @@ class DBDriver implements DBDriverInterface
 {
     private $db;
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $pdo)
     {
-        $this->db = $db;
+        $this->db = $pdo;
     }
 
     /**
      * @param false|PDOStatement $statement
-     * @return bool
+     * @return void
      * @throws DataBaseException
      */
     protected static function checkErrors($statement)
     {
         if ($statement === false) {
-            return false;
+            throw new DataBaseException('Request failed!');
         }
 
         $errorInfo = $statement->errorInfo();
@@ -34,9 +34,14 @@ class DBDriver implements DBDriverInterface
 //        save to logs     exit($errorInfo[2]);
         }
 
-        return true;
     }
 
+    /**
+     * @param string $table
+     * @param array $params
+     * @return mixed|string
+     * @throws DataBaseException
+     */
     public function create(string $table, array $params)
     {
         $paramsKeys = array_keys($params);
@@ -53,14 +58,19 @@ class DBDriver implements DBDriverInterface
         return $this->db->lastInsertId();
     }
 
+    /**
+     * @param string $sql
+     * @param int $fetch
+     * @param array $params
+     * @return array|bool|mixed
+     * @throws DataBaseException
+     */
     public function read(string $sql, $fetch = self::FETCH_ALL, array $params = [])
     {
         $statement = $this->db->prepare($sql);
         $statement->execute($params);
 
-        if (!self::checkErrors($statement)) {
-            return false;
-        }
+        self::checkErrors($statement);
         if ($fetch === self::FETCH_ONE) {
             return $statement->fetch(PDO::FETCH_ASSOC);
         }
@@ -82,6 +92,14 @@ class DBDriver implements DBDriverInterface
         return $mapped;
     }
 
+    /**
+     * @param string $table
+     * @param array $setParams
+     * @param string $where
+     * @param array $whereParams
+     * @return bool|int|mixed
+     * @throws DataBaseException
+     */
     public function update(string $table, array $setParams, string $where, array $whereParams)
     {
         if (!empty(array_intersect_key($setParams, $whereParams))) {
@@ -101,6 +119,13 @@ class DBDriver implements DBDriverInterface
         return $statement->rowCount();
     }
 
+    /**
+     * @param string $table
+     * @param string $where
+     * @param array $whereParams
+     * @return int|mixed
+     * @throws DataBaseException
+     */
     public function delete(string $table, string $where, array $whereParams)
     {
         $sql = "DELETE FROM $table WHERE $where;";

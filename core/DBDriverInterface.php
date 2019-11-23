@@ -4,6 +4,8 @@
 namespace core;
 
 
+use core\exceptions\DataBaseException;
+
 interface DBDriverInterface
 {
     const FETCH_ONE = 1;
@@ -30,6 +32,7 @@ interface DBDriverInterface
      * @param array $setParams
      * @param string $where
      * @param array $whereParams
+     * @throws DataBaseException
      * @return mixed
      */
     public function update(string $table, array $setParams, string $where, array $whereParams);
