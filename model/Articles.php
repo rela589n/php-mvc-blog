@@ -40,14 +40,17 @@ class Articles extends Base
 
             'type' => Validator::TYPE_STRING,
 
-            'length' => [8, 64],
-            'length_message' => 'Title length must be between 8 and 64 characters!'
+            'min_length' => 8,
+            'max_length' => 64,
+
+            'min_length_message' => 'Title length must be at least %1$d characters!',
+            'max_length_message' => 'Title length must be below %1$d characters. %2$d got!',
         ],
         'content' => [
             'required' => true,
             'required_message' => self::EMPTY_CONTENT,
             'type' => Validator::TYPE_STRING,
-            'length' => [8, 65535],
+            'min_length' => 8
         ]
     ];
 

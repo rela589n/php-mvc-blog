@@ -14,15 +14,16 @@ class Texts extends Base
     private const SCHEMA = [
         'alias' => [
             'type' => 'string',
-            'length' => [64]
+            'max_length' => 64
         ],
         'name' => [
             'type' => 'string',
-            'length' => [4, 128],
+            'min_length' => 4,
+            'max_length' => 128,
         ],
         'value' => [
             'type' => 'string',
-            'length' => 256,
+            'max_length' => 256,
         ]
     ];
 

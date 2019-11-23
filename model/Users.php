@@ -27,14 +27,16 @@ class Users extends Base
         ],
         'user_name' => [
             'type' => 'string',
-            'length' => [4, 64],
+            'min_length' => 4,
+            'max_length' => 64,
             'preg_match' => '/^[0-9a-z_\-]+$/i',
             'preg_match_message' => 'Имя пользователя может содержать только латинские буквы, цифры, дефис и нижнее подчёркивание!',
             'required' => true
         ],
         'password' => [
             'type' => 'string',
-            'length' => [5, 50],
+            'min_length' => 5,
+            'max_length' => 50,
             'required' => true
         ],
         'password_confirm' => [

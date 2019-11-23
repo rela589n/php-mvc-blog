@@ -4,6 +4,9 @@
 namespace core;
 
 use core\exceptions\ValidatorException;
+use core\exceptions\ValidatorLessThanRequiredException;
+use core\exceptions\ValidatorMoreThanRequiredException;
+
 
 class Validator
 {
@@ -13,7 +16,6 @@ class Validator
     public $success = false;
     public $errors = [];
     public $clear = []; // successful validated fields
-
 
     public const TYPE_INT = 'int';
     public const TYPE_FLOAT = 'float';
@@ -89,34 +91,33 @@ class Validator
         return $this;
     }
 
-    protected function checkLength(string $field, $length)
+    /**
+     * If message for error handling isset,
+     * %1$d = required number of characters
+     * %2$d = current number of characters,
+     * @param string $value
+     * @param array $rules
+     * @throws ValidatorLessThanRequiredException
+     * @throws ValidatorMoreThanRequiredException
+     */
+    protected function validateLength(string $value, array &$rules): void
     {
-        $minLen = 0;
+        $minLen = (int)($rules['min_length'] ?? 0);
+        $strLen = mb_strlen($value);
 
-        if (is_array($length)) {
-            switch (count($length)) {
-                case 1:
-                    $maxLen = $length[0];
-                    break;
-                case 2:
-                    $minLen = $length[0];
-                    $maxLen = $length[1];
-                    break;
-                default:
-                    throw new ValidatorException('Too many params passed as length. No more than 2 is expected.');
-            }
-        } else if (ctype_digit($length)) {
-            $maxLen = intval($length);
-        } else if (is_int($length)) {
-            $maxLen = $length;
-        } else {
-            throw new ValidatorException('Invalid param length. It must be array with 2 values [min, max].');
+        if ($strLen < $minLen) {
+            throw new ValidatorLessThanRequiredException($strLen, $minLen);
         }
 
-        $currentLen = mb_strlen($field);
-        $this->length = [$minLen, $maxLen, $currentLen];
+        if (!isset($rules['max_length'])) {
+            return;
+        }
 
-        return ($minLen <= $currentLen) && ($currentLen <= $maxLen);
+        $maxLen = $rules['max_length'];
+
+        if ($strLen > $maxLen) {
+            throw new ValidatorMoreThanRequiredException($strLen, $maxLen);
+        }
     }
 
     protected function validateType(string $fieldName, $field, array &$rules)
@@ -145,21 +146,39 @@ class Validator
 
                 return true;
             case self::TYPE_STRING:
+//c3d6e8
+                try {
+                    $this->validateLength($field, $rules);
+                    return true;
+                } catch (ValidatorLessThanRequiredException $e) {
 
-                if (!$this->checkLength($field, $rules['length'])) {
-                    $this->errors[$fieldName] = ($rules['length_message']) ??
-                        sprintf(
-                            'Field %s must be between %d and %d characters! Now is: %d.',
-                            $fieldName,
-                            $this->length[0],
-                            $this->length[1],
-                            $this->length[2],
-                        );
+                    $userErrMsg = $rules['min_length_message'] ?? null;
 
-                    return false;
+                    $this->errors[$fieldName] =
+                        ($userErrMsg === null) ?
+                            sprintf(
+                                'Field %s must be at least %d characters. Now is: %d.',
+                                $fieldName,
+                                $e->getMinLen(),
+                                $e->getCurrentLen()
+                            ) :
+                            sprintf($userErrMsg, $e->getMinLen(), $e->getCurrentLen());
+
+                } catch (ValidatorMoreThanRequiredException $e) {
+                    $userErrMsg = $rules['max_length_message'] ?? null;
+
+                    $this->errors[$fieldName] =
+                        ($userErrMsg === null) ?
+                            sprintf(
+                                'Field %s must be below %d characters. Now is: %d.',
+                                $fieldName,
+                                $e->getMaxLength(),
+                                $e->getCurrentLen()
+                            ) :
+                            sprintf($userErrMsg, $e->getMaxLength(), $e->getCurrentLen());
                 }
 
-                return true;
+                return false;
             default:
                 throw new ValidatorException('Unknown property type.');
         }

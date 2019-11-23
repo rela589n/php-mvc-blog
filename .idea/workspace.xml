@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="" />
+    <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Articles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/Validator.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Validator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Articles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Texts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Users.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Users.php" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,18 +103,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Diagrams" />
   </component>
   <component name="RecentsManager">
     <key name="OPEN_URL_DIALOG">
       <recent name="http://192.168.1.1/admin/index.html#/home" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\php2\oop-blog" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\core" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\view\v_main" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view\dashboard\texts" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
@@ -114,6 +115,13 @@
       <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
       <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
       <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\php2\oop-blog" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\view\v_main" />
+      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view\dashboard\texts" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -246,7 +254,10 @@
       <workItem from="1571713298986" duration="803000" />
       <workItem from="1571760482963" duration="3732000" />
       <workItem from="1571801893880" duration="784000" />
-      <workItem from="1574491708939" duration="3847000" />
+      <workItem from="1574491708939" duration="4904000" />
+      <workItem from="1574517018652" duration="1948000" />
+      <workItem from="1574519137333" duration="4347000" />
+      <workItem from="1574523643242" duration="1838000" />
     </task>
     <servers />
   </component>
@@ -271,5 +282,16 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/index.php</url>
+          <line>43</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

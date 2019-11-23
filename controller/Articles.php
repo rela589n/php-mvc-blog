@@ -75,6 +75,7 @@ class Articles extends Base
      * @param $id
      * @throws NotFoundException
      * @throws ValidatorException
+     * @throws \core\exceptions\RequestException
      */
     public function editAction($id)
     {
@@ -157,7 +158,7 @@ class Articles extends Base
                 $insertId = $mArticle->insert($title, $content, $_SESSION[$mAuth::SESSION_USER_ID_KEY]);
                 redirect(ROOT . "article/$insertId/");
             } catch (IncorrectDataException $e) {
-                $msg = $e->getMessage() ?: ARTICLE_SAVE_ERROR;
+                $msg = ARTICLE_SAVE_ERROR;
                 $errors = $e->getErrors();
             }
         }
