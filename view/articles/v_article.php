@@ -11,7 +11,7 @@
         <? if ($isAuth): ?>
             <p class="links">
                 <? if ($isOwner): ?>
-                    <a href="<?= ROOT ?>article/edit/<?= $article['article_id'] ?>/" class="more">Edit</a>
+                    <a href="<?= ROOT ?>/article/edit/<?= $article['article_id'] ?>/" class="more">Edit</a>
                 <? endif; ?>
             </p>
         <? endif; ?>

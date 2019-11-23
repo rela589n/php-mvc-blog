@@ -6,7 +6,7 @@ use model\Users;
 $mUsers = new Users($db);
 $mAuth = new Authorization($mUsers);
 if (!$mAuth->isAuth()) {
-    redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
+    $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
 }
 
 $dashboard_page = $params[1] ?? 'home';

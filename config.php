@@ -34,7 +34,7 @@ define('TITLE_REGISTER',  'Регистрация');
 define('ADD_ARTICLE_TITLE', 'Добавить статью');
 define('DASHBOARD_PAGE_TITLE', 'Личный кабинет');
 define('ARTICLES_NOT_FOUND', 'На сайте пока ещё нет статей. Зайдите чуть-чуть-позже');
-define('ROOT', '/php2/oop-blog/');
+define('ROOT', '/php2/oop-blog');
 
 define('PAGE_NOT_FOUND', 'Ошибка 404 - страница не найдена!');
 
@@ -77,14 +77,6 @@ define('TEXTS_TEMPLATES_MAP', [
 
 /*************************************************Common functions****************************************************/
 
-/**
- * @param string $path
- */
-function redirect(string $path)
-{
-    header('Location: ' . $path);
-    exit();
-}
 
 function secure_data(string $data)
 {

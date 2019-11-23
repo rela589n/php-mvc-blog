@@ -26,6 +26,7 @@ abstract class Base
     protected $mainTemplate = 'v_main.php';
     protected $request;
 
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -80,6 +81,16 @@ abstract class Base
         ob_start();
         self::printTemplate($template, $vars);
         return ob_get_clean();
+    }
+
+    /**
+     * @param string $path
+     * @param string $root
+     */
+    protected function redirect(string $path, string $root = ROOT)
+    {
+        header('Location: ' . $root . $path);
+        exit();
     }
 
     public function __call($name, $arguments)

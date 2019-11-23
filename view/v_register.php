@@ -47,6 +47,6 @@
 
 <p>
     Already have account?
-    <a href="<?= ROOT ?>auth/">Log in</a>
+    <a href="<?= ROOT ?>/auth/">Log in</a>
 </p>
 

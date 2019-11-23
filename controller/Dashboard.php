@@ -21,7 +21,7 @@ class Dashboard extends Base
         $mAuth = new Authorization($mUsers);
 
         if (!$mAuth->isAuth()) {
-            redirect(ROOT . 'auth/?msg=' . urlencode(NOT_AUTHORIZED));
+            $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
         $this->content = self::getTemplate('dashboard/v_home.php', [
@@ -38,7 +38,7 @@ class Dashboard extends Base
         $mAuth = new Authorization($mUsers);
 
         if (!$mAuth->isAuth()) {
-            redirect(ROOT . 'auth/?msg=' . urlencode(NOT_AUTHORIZED));
+            $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
         $mTexts = new Texts($db, $validator);

@@ -1,6 +1,6 @@
 <? foreach ($articles as $article): ?>
-    <? $link = ROOT . "article/{$article['article_id']}/";
-        $edit_link = ROOT . "article/edit/{$article['article_id']}/"; ?>
+    <? $link = ROOT . "/article/{$article['article_id']}/";
+        $edit_link = ROOT . "/article/edit/{$article['article_id']}/"; ?>
 
     <div class="post">
         <h2 class="title"><a href="<?= $link ?>"><?= $article['title'] ?></a></h2>

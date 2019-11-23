@@ -41,7 +41,7 @@ class Articles extends Base
             ]);
         }
 
-        $this->message = sprintf('"%s"', urldecode($_GET['msg'] ?? ''));
+        $this->message = sprintf('"%s"', base64_decode($_GET['msg'] ?? ''));
     }
 
     /**
@@ -84,7 +84,7 @@ class Articles extends Base
 
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
-            redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
+            $this->redirect( '/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
         $mArticles = new \model\Articles($db, new Validator());
@@ -101,12 +101,12 @@ class Articles extends Base
                 try {
                     $mArticles->update($id, $articleTitle, $articleContent);
                     unset($_SESSION['edit_id']);
-                    redirect(ROOT . "article/$id/");
+                    $this->redirect("/article/$id/");
                 } catch (IncorrectDataException $e) {
                     $msg = $e->getMessage();
                     $errors = $e->getErrors();
                 } catch (DataBaseException $e) {
-                    redirect(ROOT . '?msg=' . urlencode(ARTICLE_SAVE_ERROR));
+                    $this->redirect( '?msg=' . base64_encode(ARTICLE_SAVE_ERROR));
                 }
             }
         } else { // GET
@@ -114,7 +114,7 @@ class Articles extends Base
 
             if (!$mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) &&
                 $article['id_user'] != $_SESSION[$mAuth::SESSION_USER_ID_KEY]) {
-                redirect(ROOT . '?msg=' . urlencode(EDIT_DENIED));
+                $this->redirect( '?msg=' . base64_encode(EDIT_DENIED));
             }
 
             $_SESSION['edit_id'] = $id;
@@ -140,7 +140,8 @@ class Articles extends Base
 
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
-            redirect(ROOT . 'login/?msg=' . urlencode(NOT_AUTHORIZED));
+
+            $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
         $mArticle = new \model\Articles($db, new Validator());
@@ -156,7 +157,7 @@ class Articles extends Base
 
             try {
                 $insertId = $mArticle->insert($title, $content, $_SESSION[$mAuth::SESSION_USER_ID_KEY]);
-                redirect(ROOT . "article/$insertId/");
+                $this->redirect("/article/$insertId/");
             } catch (IncorrectDataException $e) {
                 $msg = ARTICLE_SAVE_ERROR;
                 $errors = $e->getErrors();

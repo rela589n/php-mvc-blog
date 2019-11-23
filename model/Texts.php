@@ -27,7 +27,6 @@ class Texts extends Base
         ]
     ];
 
-
     public function __construct(DBDriverInterface $db, Validator $validator)
     {
         parent::__construct($db, $validator, "dashboard_texts", "alias");

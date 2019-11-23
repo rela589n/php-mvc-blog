@@ -26,15 +26,15 @@ class Authentication extends Base
         if ($this->request->isPost()) {
             $userName = secure_data($this->request->post('name'));
             $password = secure_data( $this->request->post('password'));
-            $remember = $this->request->post('remember');
+            $remember = $this->request->post('remember') !== null;
 
             $errors = null;
             try {
                 $mAuth->authorize($userName, $password, $remember);
-                $redirect = $_SESSION['back_redirect'] ?? ROOT . 'dashboard/';
+                $redirect =  $_SESSION['back_redirect'] ??  ROOT . '/dashboard/';
                 unset($_SESSION['back_redirect']);
 
-                redirect($redirect);
+                $this->redirect($redirect, '');
             } catch (IncorrectDataException $e) {
                 $msg = $e->getMessage();
                 $errors = $e->getErrors();
@@ -43,7 +43,7 @@ class Authentication extends Base
             }
         } else if ($this->request->isGet()) {
             $mAuth::deauthorize();
-            $msg = sprintf('%s', urldecode($_GET['msg'] ?? ''));
+            $msg = sprintf('%s', base64_decode($_GET['msg'] ?? ''));
             $userName = $password = '';
         }
         else {
@@ -75,7 +75,7 @@ class Authentication extends Base
 
             try {
                 $mUsers->register($userName, $password, $rePassword);
-                redirect(ROOT . 'auth/?msg=' . urlencode($mUsers::REGISTRATION_SUCCESSFUL));
+                $this->redirect('/auth/?msg=' . base64_encode($mUsers::REGISTRATION_SUCCESSFUL));
             } catch (IncorrectDataException $e) {
                 $errors = $e->getErrors();
                 $msg = $e->getMessage();

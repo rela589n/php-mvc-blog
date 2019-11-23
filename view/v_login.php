@@ -38,6 +38,6 @@
 
 <p>
     Still have not account?
-    <a href="<?= ROOT ?>auth/register/">Register now!</a>
+    <a href="<?= ROOT ?>/auth/register/">Register now!</a>
 </p>
 

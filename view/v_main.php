@@ -5,13 +5,13 @@
     <meta name="description" content=""/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title><?=$title?></title>
-    <link href="<?=ROOT?>assets/style.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="<?=ROOT?>/assets/style.css" rel="stylesheet" type="text/css" media="screen"/>
 </head>
 <body>
 <div id="wrapper">
     <div id="header" class="container">
         <div id="logo">
-            <h1><a href="<?= ROOT ?>">African Daisy </a></h1>
+            <h1><a href="<?= ROOT ?>/">African Daisy </a></h1>
             <p>Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a></p>
         </div>
         <div id="menu">

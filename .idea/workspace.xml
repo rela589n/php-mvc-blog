@@ -2,13 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/config.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Articles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Validator.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Validator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Articles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Authentication.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Authentication.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Base.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Dashboard.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/dashboard/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/dashboard/index.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Texts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Users.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Users.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/articles/v_article.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/articles/v_article.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/articles/v_articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/articles/v_articles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/dashboard/texts/v_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/texts/v_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/dashboard/texts/v_texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/texts/v_texts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/dashboard/v_home.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/v_home.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/header_menu/v_login_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_login_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/header_menu/v_main.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_main.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/header_menu/v_register_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_register_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/v_login.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/v_main.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_main.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/v_not_found.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_not_found.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/v_register.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_register.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -257,7 +270,7 @@
       <workItem from="1574491708939" duration="4904000" />
       <workItem from="1574517018652" duration="1948000" />
       <workItem from="1574519137333" duration="4347000" />
-      <workItem from="1574523643242" duration="1838000" />
+      <workItem from="1574523643242" duration="4363000" />
     </task>
     <servers />
   </component>

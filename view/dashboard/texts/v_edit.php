@@ -14,4 +14,4 @@
 <div class="info">
     <?php echo $message; ?>
 </div>
-<a href="<?=ROOT?>dashboard/texts">К списку всех текстов</a>
+<a href="<?=ROOT?>/dashboard/texts">К списку всех текстов</a>
