@@ -1,10 +1,10 @@
 <?php
 
 use model\Authorization;
-use model\Users;
+use model\User;
 
-$mUsers = new Users($db);
-$mAuth = new Authorization($mUsers);
+$mUser = new User($db);
+$mAuth = new Authorization($mUser);
 if (!$mAuth->isAuth()) {
     $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
 }

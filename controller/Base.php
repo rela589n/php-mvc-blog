@@ -6,17 +6,14 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
-
 use core\exceptions\NotFoundException;
 use core\Request;
-use model\Authorization;
 use model\Texts;
-use model\Users;
+use model\User;
 use core\Validator;
 
 abstract class Base
 {
-
     protected $title = '';
     protected $menu;
     protected $sidebar;
@@ -35,15 +32,15 @@ abstract class Base
     public function render()
     {
         if (!isset($this->menu)) {
-            $mUsers = new Users(
+            $mUser = new User(
                 new DBDriver(
                     DBConnector::getPdo()
-                ),
-                new Validator());
-            $mAuth = new Authorization($mUsers);
+                )
+            );
+            $userService = new \core\services\User($mUser, new Validator());
 
             $this->menu = self::getTemplate('header_menu/v_main.php', [
-                'isAuth' => $mAuth->isAuth()
+                'isAuth' => $userService->isAuth()
             ]);
         }
         if (!isset($this->sidebar)) {
@@ -51,12 +48,19 @@ abstract class Base
         }
 
         if (!isset($this->footer)) {
-            $mTexts = new Texts( new DBDriver( DBConnector::getPdo()), new Validator());
+            $textsService = new \core\services\Texts(
+                new Texts(
+                    new DBDriver(
+                        DBConnector::getPdo()
+                    )
+                ),
+                new Validator()
+            );
             $this->footer = self::getTemplate('v_footer.php', [
-                'title1' => $mTexts->getOne('footer_1'),
-                'title2' => $mTexts->getOne('footer_2'),
-                'title3' => $mTexts->getOne('footer_3'),
-                'copyright' => sprintf($mTexts->getOne('copyright'), date('Y'))
+                'title1' => $textsService->getText('footer_1'),
+                'title2' => $textsService->getText('footer_2'),
+                'title3' => $textsService->getText('footer_3'),
+                'copyright' => sprintf($textsService->getText('copyright'), date('Y'))
             ]);
         }
 
@@ -93,6 +97,11 @@ abstract class Base
         exit();
     }
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @throws NotFoundException
+     */
     public function __call($name, $arguments)
     {
         throw new NotFoundException();

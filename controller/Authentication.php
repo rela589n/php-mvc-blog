@@ -8,45 +8,44 @@ use core\DBConnector;
 use core\DBDriver;
 use core\exceptions\AuthorizationException;
 use core\exceptions\IncorrectDataException;
-use model\Authorization;
-use model\Users;
+use model\User;
 use core\Validator;
+use core\services\User as UserService;
 
 class Authentication extends Base
 {
     public function indexAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
+        $userService = new UserService(new User($db), new Validator());
 
-        $mUsers = new Users($db, new Validator());
-        $mAuth = new Authorization($mUsers);
-
-        $msg = '';
+        $msg = $login = $password = '';
         $errors = null;
         if ($this->request->isPost()) {
-            $userName = secure_data($this->request->post('name'));
-            $password = secure_data( $this->request->post('password'));
-            $remember = $this->request->post('remember') !== null;
-
-            $errors = null;
             try {
-                $mAuth->authorize($userName, $password, $remember);
-                $redirect =  $_SESSION['back_redirect'] ??  ROOT . '/dashboard/';
-                unset($_SESSION['back_redirect']);
+                $userService->signIn($this->request->post());
+                $redirect = $_SESSION['back_redirect'] ?? ROOT . '/dashboard/';
 
+                unset($_SESSION['back_redirect']);
                 $this->redirect($redirect, '');
             } catch (IncorrectDataException $e) {
                 $msg = $e->getMessage();
                 $errors = $e->getErrors();
+
             } catch (AuthorizationException $e) {
                 $msg = $e->getMessage();
             }
+
+            $params = $userService->getParams();
+            $login = $params['user_name'];
+            $password = $params['password'];
+
         } else if ($this->request->isGet()) {
-            $mAuth::deauthorize();
+
+            $userService->signOut();
+
             $msg = sprintf('%s', base64_decode($_GET['msg'] ?? ''));
-            $userName = $password = '';
-        }
-        else {
+        } else {
             throw new \Exception('Application can handle only GET and POST requests');
         }
 
@@ -54,7 +53,7 @@ class Authentication extends Base
         $this->title = TITLE_LOGIN;
 
         $this->content = self::getTemplate('v_login.php', [
-            'userName' => $userName,
+            'userName' => $login,
             'password' => $password,
             'errors' => $errors,
             'message' => $msg
@@ -64,26 +63,19 @@ class Authentication extends Base
     public function registerAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUsers = new Users($db, new Validator());
-        $msg = '';
+        $userService = new UserService(new User($db), new Validator());
+
+        $userName = $password = $rePassword = $msg = '';
         $errors = null;
 
         if ($this->request->isPost()) {
-            $userName = secure_data($this->request->post('name'));
-            $password = secure_data($this->request->post('password'));
-            $rePassword = secure_data($this->request->post('password_confirm'));
-
             try {
-                $mUsers->register($userName, $password, $rePassword);
-                $this->redirect('/auth/?msg=' . base64_encode($mUsers::REGISTRATION_SUCCESSFUL));
+                $userService->signUp($this->request->post());
+                $this->redirect('/auth/?msg=' . base64_encode(UserService::REGISTRATION_SUCCESSFUL));
             } catch (IncorrectDataException $e) {
                 $errors = $e->getErrors();
                 $msg = $e->getMessage();
             }
-
-        } else if ($this->request->isGet()) {
-            $msg = '';
-            $userName = $password = $rePassword = '';
         }
 
         $this->title = TITLE_REGISTER;

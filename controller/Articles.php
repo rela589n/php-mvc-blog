@@ -11,7 +11,7 @@ use core\exceptions\IncorrectDataException;
 use core\exceptions\NotFoundException;
 use core\exceptions\RequestException;
 use core\exceptions\ValidatorException;
-use model\Authorization;
+use core\services\User as UserService;
 use model\User;
 use model\Articles as ArticlesModel;
 use core\Validator;
@@ -28,17 +28,15 @@ class Articles extends Base
 
         $mArticles = new ArticlesModel($db);
         $articlesService = new ArticlesService($mArticles, new Validator());
-
-        $mUser = new User($db);
-        $mAuth = new Authorization($mUser);
+        $userService = new UserService(new User($db), new Validator());
 
         try {
             $articles = $articlesService->getAllPreviews();
 
             $this->content = self::getTemplate('articles/v_articles.php', [
                 'articles' => $articles,
-                'isAdmin' => $mAuth->isAdmin($_SESSION[Authorization::SESSION_USER_NAME_KEY] ?? ''),
-                'userId' => $_SESSION[Authorization::SESSION_USER_ID_KEY] ?? 0
+                'isAdmin' => $userService->isAdmin($_SESSION[UserService::SESSION_USER_NAME_KEY] ?? ''),
+                'userId' => $_SESSION[UserService::SESSION_USER_ID_KEY] ?? 0
             ]);
 
         } catch (ArticlesNotFoundException $e) {
@@ -62,16 +60,15 @@ class Articles extends Base
 
         $article = $articlesService->getOneRepresentation($this->request->get('id'));
 
-        $mUser = new User($db);
-        $mAuth = new Authorization($mUser);
+        $userService = new UserService(new User($db), new Validator());
 
         $this->title = $article['title'];
         $this->content = self::getTemplate('articles/v_article.php', [
             'article' => $article,
-            'isAuth' => $mAuth->isAuth(),
-            'isOwner' => $mAuth->isAuth() &&
-                ($mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) ||
-                    $article['id_user'] == $_SESSION[$mAuth::SESSION_USER_ID_KEY])
+            'isAuth' => $userService->isAuth(),
+            'isOwner' => $userService->isAuth() &&
+                ($userService->isAdmin($_SESSION[UserService::SESSION_USER_NAME_KEY]) ||
+                    $article['id_user'] == $_SESSION[UserService::SESSION_USER_ID_KEY])
         ]);
 
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
@@ -85,9 +82,9 @@ class Articles extends Base
     public function editAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mAuth = new Authorization(new User($db));
+        $userService = new UserService(new User($db), new Validator());
 
-        if (!$mAuth->isAuth()) {
+        if (!$userService->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
@@ -128,8 +125,8 @@ class Articles extends Base
         } else { // GET
             $article = $articlesService->getOne($id);
 
-            if (!$mAuth->isAdmin($_SESSION[Authorization::SESSION_USER_NAME_KEY]) &&
-                $article['id_user'] != $_SESSION[Authorization::SESSION_USER_ID_KEY]) {
+            if (!$userService->isAdmin($_SESSION[UserService::SESSION_USER_NAME_KEY]) &&
+                $article['id_user'] != $_SESSION[UserService::SESSION_USER_ID_KEY]) {
                 $this->redirect('?msg=' . base64_encode(EDIT_DENIED));
             }
 
@@ -155,10 +152,9 @@ class Articles extends Base
     public function addAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUser = new User($db);
-        $mAuth = new Authorization($mUser);
+        $userService = new UserService(new User($db), new Validator());
 
-        if (!$mAuth->isAuth()) {
+        if (!$userService->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
 
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
@@ -174,7 +170,7 @@ class Articles extends Base
         if ($this->request->isPost()) {
             try {
                 $createParams = $this->request->post();
-                $createParams['id_user'] = $_SESSION[Authorization::SESSION_USER_ID_KEY];
+                $createParams['id_user'] = $_SESSION[UserService::SESSION_USER_ID_KEY];
 
                 $insertId = $articlesService->create($createParams);
                 $this->redirect("/article/$insertId/");
@@ -190,7 +186,7 @@ class Articles extends Base
         }
 
         $this->menu = self::getTemplate('header_menu/v_main.php', [
-            'isAuth' => $mAuth->isAuth()
+            'isAuth' => $userService->isAuth()
         ]);
 
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
