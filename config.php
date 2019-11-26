@@ -8,7 +8,6 @@
 
 /********************************************************Errors*******************************************************/
 
-
 define('ARTICLE_NOT_FOUND', 'Ошибка 404. Нет такой статьи!');
 define('ARTICLE_SAVE_ERROR', 'Ошибка сохранения статьи');
 define('FILL_IN_ALL_FIELDS', 'Заполните все поля!');
@@ -33,7 +32,6 @@ define('TITLE_LOGIN', 'Авторизация');
 define('TITLE_REGISTER',  'Регистрация');
 define('ADD_ARTICLE_TITLE', 'Добавить статью');
 define('DASHBOARD_PAGE_TITLE', 'Личный кабинет');
-define('ARTICLES_NOT_FOUND', 'На сайте пока ещё нет статей. Зайдите чуть-чуть-позже');
 define('ROOT', '/php2/oop-blog');
 
 define('PAGE_NOT_FOUND', 'Ошибка 404 - страница не найдена!');
@@ -73,12 +71,3 @@ define('TEXTS_TEMPLATES_MAP', [
     'all' => 'all_texts.php',
     'edit' => 'edit.php'
 ]) ;
-
-
-/*************************************************Common functions****************************************************/
-
-
-function secure_data(string $data)
-{
-    return htmlspecialchars(trim($data));
-}
