@@ -5,13 +5,17 @@ namespace controller;
 
 use core\DBConnector;
 use core\DBDriver;
+use core\exceptions\ArticlesNotFoundException;
 use core\exceptions\DataBaseException;
 use core\exceptions\IncorrectDataException;
 use core\exceptions\NotFoundException;
+use core\exceptions\RequestException;
 use core\exceptions\ValidatorException;
 use model\Authorization;
-use model\Users;
+use model\User;
+use model\Articles as ArticlesModel;
 use core\Validator;
+use core\services\Articles as ArticlesService;
 
 
 class Articles extends Base
@@ -22,42 +26,44 @@ class Articles extends Base
 
         $db = new DBDriver(DBConnector::getPdo());
 
-        $mArticles = new \model\Articles($db, new Validator());
-        $mUsers = new Users($db, new Validator());
-        $mAuth = new Authorization($mUsers);
+        $mArticles = new ArticlesModel($db);
+        $articlesService = new ArticlesService($mArticles, new Validator());
 
-        $articles = $mArticles->getAll();
-        if (empty($articles)) {
-            $this->content = '<h3>' . ARTICLES_NOT_FOUND . '</h3>';
-        } else {
-            $articles = array_map(function (array $article) use ($mArticles) {
-                return $mArticles::getPreviewRepresentation($article);
-            }, $articles);
+        $mUser = new User($db);
+        $mAuth = new Authorization($mUser);
+
+        try {
+            $articles = $articlesService->getAllPreviews();
 
             $this->content = self::getTemplate('articles/v_articles.php', [
                 'articles' => $articles,
-                'isAdmin' => $mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY] ?? ''),
-                'userId' => $_SESSION[$mAuth::SESSION_USER_ID_KEY] ?? 0
+                'isAdmin' => $mAuth->isAdmin($_SESSION[Authorization::SESSION_USER_NAME_KEY] ?? ''),
+                'userId' => $_SESSION[Authorization::SESSION_USER_ID_KEY] ?? 0
             ]);
+
+        } catch (ArticlesNotFoundException $e) {
+            $this->content = "<h3>{$e->getMessage()}</h3>";
         }
 
         $this->message = sprintf('"%s"', base64_decode($_GET['msg'] ?? ''));
     }
 
     /**
-     * @param $id
      * @throws NotFoundException
+     * @throws RequestException
      * @throws ValidatorException
      */
-    public function singleAction($id)
+    public function singleAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mArticles = new \model\Articles($db, new Validator());
 
-        $article = $mArticles->getById($id);
-        $article = $mArticles::getRepresentation($article);
+        $mArticles = new ArticlesModel($db);
+        $articlesService = new ArticlesService($mArticles, new Validator());
 
-        $mAuth = new Authorization(new Users($db, new Validator()));
+        $article = $articlesService->getOneRepresentation($this->request->get('id'));
+
+        $mUser = new User($db);
+        $mAuth = new Authorization($mUser);
 
         $this->title = $article['title'];
         $this->content = self::getTemplate('articles/v_article.php', [
@@ -72,49 +78,59 @@ class Articles extends Base
     }
 
     /**
-     * @param $id
      * @throws NotFoundException
+     * @throws RequestException
      * @throws ValidatorException
-     * @throws \core\exceptions\RequestException
      */
-    public function editAction($id)
+    public function editAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mAuth = new Authorization(new Users($db, new Validator()));
+        $mAuth = new Authorization(new User($db));
 
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
-            $this->redirect( '/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
+            $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
-        $mArticles = new \model\Articles($db, new Validator());
+        $mArticles = new ArticlesModel($db);
+        $articlesService = new ArticlesService($mArticles, new Validator());
+
 
         $msg = '';
         $errors = null;
+        $id = $this->request->get('id');
+
         if ($this->request->isPost()) {
-            $articleTitle = secure_data($this->request->post('title'));
-            $articleContent = secure_data($this->request->post('content'));
 
             if (!isset($_SESSION['edit_id']) || $_SESSION['edit_id'] != $id) {
                 $msg = PERMISSION_DENIED_ERROR;
             } else {
                 try {
-                    $mArticles->update($id, $articleTitle, $articleContent);
+                    $articlesService->edit(
+                        array_merge(
+                            $this->request->post(),
+                            ['id' => $id]
+                        )
+                    );
                     unset($_SESSION['edit_id']);
                     $this->redirect("/article/$id/");
                 } catch (IncorrectDataException $e) {
                     $msg = $e->getMessage();
                     $errors = $e->getErrors();
                 } catch (DataBaseException $e) {
-                    $this->redirect( '?msg=' . base64_encode(ARTICLE_SAVE_ERROR));
+                    $this->redirect('?msg=' . base64_encode(ARTICLE_SAVE_ERROR));
                 }
+
+                $params = $articlesService->getParams();
+                $articleTitle = $params['title'];
+                $articleContent = $params['content'];
             }
         } else { // GET
-            $article = $mArticles->getById($id);
+            $article = $articlesService->getOne($id);
 
-            if (!$mAuth->isAdmin($_SESSION[$mAuth::SESSION_USER_NAME_KEY]) &&
-                $article['id_user'] != $_SESSION[$mAuth::SESSION_USER_ID_KEY]) {
-                $this->redirect( '?msg=' . base64_encode(EDIT_DENIED));
+            if (!$mAuth->isAdmin($_SESSION[Authorization::SESSION_USER_NAME_KEY]) &&
+                $article['id_user'] != $_SESSION[Authorization::SESSION_USER_ID_KEY]) {
+                $this->redirect('?msg=' . base64_encode(EDIT_DENIED));
             }
 
             $_SESSION['edit_id'] = $id;
@@ -132,11 +148,15 @@ class Articles extends Base
         $this->sidebar = self::getTemplate('sidebar/v_sidebar_short.php');
     }
 
-    public function addAction($id)
+    /**
+     * @throws RequestException
+     * @throws ValidatorException
+     */
+    public function addAction()
     {
         $db = new DBDriver(DBConnector::getPdo());
-        $mUsers = new Users($db, new Validator());
-        $mAuth = new Authorization($mUsers);
+        $mUser = new User($db);
+        $mAuth = new Authorization($mUser);
 
         if (!$mAuth->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
@@ -144,24 +164,29 @@ class Articles extends Base
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
-        $mArticle = new \model\Articles($db, new Validator());
+        $mArticles = new ArticlesModel($db);
+        $articlesService = new ArticlesService($mArticles, new Validator());
         $msg = '';
         $title = '';
         $content = '';
         $errors = null;
 
         if ($this->request->isPost()) {
-
-            $title = secure_data($this->request->post('title'));
-            $content = secure_data($this->request->post('content'));
-
             try {
-                $insertId = $mArticle->insert($title, $content, $_SESSION[$mAuth::SESSION_USER_ID_KEY]);
+                $createParams = $this->request->post();
+                $createParams['id_user'] = $_SESSION[Authorization::SESSION_USER_ID_KEY];
+
+                $insertId = $articlesService->create($createParams);
                 $this->redirect("/article/$insertId/");
             } catch (IncorrectDataException $e) {
                 $msg = ARTICLE_SAVE_ERROR;
                 $errors = $e->getErrors();
             }
+
+            $params = $articlesService->getParams();
+
+            $title = $params['title'];
+            $content = $params['content'];
         }
 
         $this->menu = self::getTemplate('header_menu/v_main.php', [
