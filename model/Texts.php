@@ -5,7 +5,7 @@ namespace model;
 
 
 use core\DBDriverInterface;
-use core\Validator;
+use core\exceptions\DataBaseException;
 
 class Texts extends Base
 {
@@ -14,6 +14,14 @@ class Texts extends Base
         parent::__construct($db, 'dashboard_texts', "alias");
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     * @param string $alias
+     * @param string|null $oldAlias
+     * @return mixed
+     * @throws DataBaseException
+     */
     public function update(string $name, string $value, string $alias, string $oldAlias = null)
     {
         $oldAlias = $oldAlias ?? $alias;
@@ -31,4 +39,6 @@ class Texts extends Base
             ]
         );
     }
+
+
 }
