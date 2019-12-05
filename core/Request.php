@@ -73,7 +73,7 @@ class Request
      */
     protected function getParam(string $arrayName, $key = null)
     {
-        $arr = $this->$arrayName ?? null;
+        $arr = &$this->$arrayName ?? null;
 
         if ($arr === null) {
             throw new RequestException('Invalid array name');
@@ -84,6 +84,23 @@ class Request
         }
 
         return $arr[$key] ?? null;
+    }
+
+    /**
+     * @param string $arrayName
+     * @param $key
+     * @param $val
+     * @throws RequestException
+     */
+    public function setParam(string $arrayName, $key, $val)
+    {
+        $arr = &$this->$arrayName ?? null;
+
+        if ($arr === null) {
+            throw new RequestException('Invalid array name');
+        }
+
+        $arr[$key] = $val;
     }
 
     /**

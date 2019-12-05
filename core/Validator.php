@@ -11,9 +11,8 @@ use core\exceptions\ValidatorMoreThanRequiredException;
 class Validator
 {
     protected $schema = null;
-    protected $length = []; // [min, max, current] for string validation
 
-    public $success = false;
+    private $success = false;
     public $errors = [];
     public $clear = []; // successful validated fields
 
@@ -43,8 +42,10 @@ class Validator
         foreach ($fields as $name => $val) {
             $rules = $this->schema[$name];
 
+            //var_dump($rules['required']);
+
             if (
-                $this->validateRequired($name, $fields, $rules) &&
+                ($this->validateRequired($name, $fields, $rules) || !empty($fields[$name])) &&
 
                 $this->validateType($name, $fields[$name], $rules) &&
 
@@ -52,7 +53,7 @@ class Validator
 
                 $this->validateEqualsTo($name, $fields, $rules)
             ) {
-                $this->clear [] = $name;
+                $this->clear [$name] = $val;
             }
         }
 
@@ -73,7 +74,7 @@ class Validator
         foreach ($this->schema as $name => $rules) {
 
             if (
-                $this->validateRequired($name, $fields, $rules) &&
+                ($this->validateRequired($name, $fields, $rules) || !empty($fields[$name])) &&
 
                 $this->validateType($name, $fields[$name], $rules) &&
 
@@ -85,9 +86,7 @@ class Validator
             }
         }
 
-        if (empty($this->errors)) {
-            $this->success = true;
-        }
+        $this->success = empty($this->errors);
         return $this;
     }
 
@@ -120,8 +119,9 @@ class Validator
         }
     }
 
-    protected function validateType(string $fieldName, $field, array &$rules)
+    protected function validateType(string $fieldName, &$field, array &$rules)
     {
+        $field = $this->secure_string($field);
         if (!isset($rules['type'])) {
             return true;
         }
@@ -146,7 +146,7 @@ class Validator
 
                 return true;
             case self::TYPE_STRING:
-//c3d6e8
+
                 try {
                     $this->validateLength($field, $rules);
                     return true;
@@ -198,15 +198,24 @@ class Validator
         return $r;
     }
 
+
+    /**
+     * true - if field is not required or not empty
+     * @param string $fieldName
+     * @param array $fields
+     * @param array $rules
+     * @return bool
+     */
     protected function validateRequired(string $fieldName, array &$fields, array &$rules)
     {
-
-        if (isset($rules['required']) && (!isset($fields[$fieldName]) || empty($fields[$fieldName]))) {
-            $this->errors[$fieldName] = ($rules['required_message']) ??
-                sprintf('Field %s is required!', $fieldName);
-            return false;
+        if (!isset($rules['required']) || !empty($fields[$fieldName])) {
+            return true;
         }
-        return true;
+
+        $this->errors[$fieldName] = ($rules['required_message']) ??
+            sprintf('Field %s is required!', $fieldName);
+
+        return false;
     }
 
     protected function validateEqualsTo(string $fieldName, array &$fields, array &$rules)
@@ -230,5 +239,16 @@ class Validator
     public function appendErrors(array $errors)
     {
         $this->errors = array_merge($this->errors, $errors);
+        $this->success = false;
+    }
+
+    public function success(): bool
+    {
+        return $this->success;
+    }
+
+    public function secure_string($str)
+    {
+        return htmlspecialchars(trim($str));
     }
 }
