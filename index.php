@@ -2,10 +2,7 @@
 
 include_once 'config.php';
 
-use controller\NotFound;
-use core\exceptions\NotFoundException;
-use core\Registry;
-use core\Request;
+use core\FrontController;
 
 spl_autoload_register(function ($classPath) {
     $classPath = str_replace('\\', '/', $classPath);
@@ -14,42 +11,4 @@ spl_autoload_register(function ($classPath) {
 
 session_start();
 
-$params = explode('/', $_GET['php_hru']);
-if ($params[$last = count($params) - 1] == '') {
-    unset($params[$last]);
-    unset($last);
-}
-
-try {
-    $controller = $params[0] ?? 'article';
-    if (!in_array($controller, array_keys(CONTROLLERS_MAP), true)) {
-        throw new NotFoundException("Page not found!");
-    } else {
-        $controller = CONTROLLERS_MAP[$controller];
-
-        $id = null;
-        if (isset($params[1]) && ctype_digit($params[1])) {
-            $id = $params[1];
-            $params[1] = 'single';
-        }
-
-        $action = $params[1] ?? 'index';
-
-        if (!isset($id) && isset($params[2]) && ctype_digit($params[2])) {
-            $id = $params[2];
-        }
-        $_GET['id'] = $id;
-        Registry::getInstance()->getRequest();
-        unset($_GET['id']);
-
-        $action .= 'Action';
-
-        $controller = new $controller();
-        $controller->$action();
-        $controller->render();
-    }
-} catch (NotFoundException $e) {
-    $controller = new NotFound();
-    $controller->indexAction($e->getMessage());
-    $controller->render();
-}
+FrontController::run();

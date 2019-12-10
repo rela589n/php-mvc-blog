@@ -114,12 +114,32 @@ class Request
 
     /**
      * @param $key
+     * @param $val
+     * @throws RequestException
+     */
+    public function setGet($key, $val) : void
+    {
+        $this->setParam('get', $key, $val);
+    }
+
+    /**
+     * @param $key
      * @return mixed
      * @throws RequestException
      */
     public function post($key = null)
     {
         return $this->getParam(__FUNCTION__, $key);
+    }
+
+    /**
+     * @param $key
+     * @param $val
+     * @throws RequestException
+     */
+    public function setPost($key, $val) : void
+    {
+        $this->setParam('post', $key, $val);
     }
 
     /**
@@ -170,7 +190,7 @@ class Request
     public function setPath(string $path): void
     {
         $this->path = $path;
-        $this->pathParts = explode('/', $path);
+        $this->pathParts = array_filter(explode('/', $path));
     }
 
     public function getPathParts(): array

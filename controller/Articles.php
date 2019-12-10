@@ -3,8 +3,6 @@
 
 namespace controller;
 
-use core\database\DBConnector;
-use core\database\DBDriver;
 use core\exceptions\ArticlesNotFoundException;
 use core\exceptions\DataBaseException;
 use core\exceptions\IncorrectDataException;
@@ -12,11 +10,6 @@ use core\exceptions\NotFoundException;
 use core\exceptions\RequestException;
 use core\exceptions\ValidatorException;
 use core\services\User as UserService;
-use model\User;
-use model\Articles as ArticlesModel;
-use core\Validator;
-use core\services\Articles as ArticlesService;
-
 
 class Articles extends Base
 {
@@ -85,20 +78,15 @@ class Articles extends Base
 
         $msg = '';
         $errors = null;
-        $id = $this->request->get('id');
 
         if ($this->request->isPost()) {
-
+            $id = $this->request->post('id');
             if (!isset($_SESSION['edit_id']) || $_SESSION['edit_id'] != $id) {
                 $msg = PERMISSION_DENIED_ERROR;
             } else {
                 try {
-                    $articlesService->edit(
-                        array_merge(
-                            $this->request->post(),
-                            ['id' => $id]
-                        )
-                    );
+                    $articlesService->edit($this->request->post());
+
                     unset($_SESSION['edit_id']);
                     $this->redirect("/article/$id/");
                 } catch (IncorrectDataException $e) {
@@ -113,6 +101,7 @@ class Articles extends Base
                 $articleContent = $params['content'];
             }
         } else { // GET
+            $id = $this->request->get('id');
             $article = $articlesService->getOne($id);
 
             if (!$userService->isAdmin($_SESSION[UserService::SESSION_USER_NAME_KEY]) &&

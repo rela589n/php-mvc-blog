@@ -2,28 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="Articles: moved business logic from model into service">
-      <change afterPath="$PROJECT_DIR$/core/dependencies/DIContainer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/dependencies/RegisterBoxInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/dependencies/ServiceBuilderBox.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/exceptions/DIContainerException.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9d32655b-491f-4db0-980a-fe7e5d549a91.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9d32655b-491f-4db0-980a-fe7e5d549a91.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Articles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/Authentication.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Authentication.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Base.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Dashboard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/ControllerFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/ControllerFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Registry.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Registry.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Request.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Request.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Validator.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Validator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/database/DBConnector.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBConnector.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/database/DBDriver.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBDriver.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/database/DBDriverInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBDriverInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Articles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Base.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Texts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -130,18 +109,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.updates" />
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
   </component>
   <component name="RecentsManager">
     <key name="OPEN_URL_DIALOG">
       <recent name="http://192.168.1.1/admin/index.html#/home" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\php2\oop-blog\core\database" />
@@ -149,6 +121,13 @@
       <recent name="C:\xampp\htdocs\php2\oop-blog\core\services" />
       <recent name="C:\xampp\htdocs\php2\oop-blog" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core\exceptions" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\model" />
+      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view" />
+      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -296,7 +275,7 @@
       <workItem from="1574848414596" duration="165000" />
       <workItem from="1575520652272" duration="2228000" />
       <workItem from="1575952892598" duration="3586000" />
-      <workItem from="1575991746037" duration="1628000" />
+      <workItem from="1575991746037" duration="7013000" />
     </task>
     <task id="LOCAL-00001" summary="Articles: moved business logic from model into service">
       <created>1574746954107</created>
