@@ -3,7 +3,6 @@
 
 namespace core;
 
-
 use core\exceptions\RequestException;
 
 class Request

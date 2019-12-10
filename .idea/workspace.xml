@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="">
+    <list default="true" id="374ede5a-53f8-4782-a46b-63882d1d330d" name="Default Changelist" comment="Articles: moved business logic from model into service">
+      <change afterPath="$PROJECT_DIR$/core/dependencies/DIContainer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/dependencies/RegisterBoxInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/dependencies/ServiceBuilderBox.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/exceptions/DIContainerException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9d32655b-491f-4db0-980a-fe7e5d549a91.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9d32655b-491f-4db0-980a-fe7e5d549a91.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/config.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Articles.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/Authentication.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Authentication.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Base.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Dashboard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/dashboard/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/dashboard/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/ControllerFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/ControllerFactory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/Registry.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Registry.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/Request.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Request.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/Validator.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Validator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/DBConnector.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBConnector.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/DBDriver.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBDriver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/DBDriverInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/database/DBDriverInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Articles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Base.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Texts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/articles/v_article.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/articles/v_article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/articles/v_articles.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/articles/v_articles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/dashboard/texts/v_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/texts/v_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/dashboard/texts/v_texts.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/texts/v_texts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/dashboard/v_home.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/dashboard/v_home.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/header_menu/v_login_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_login_menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/header_menu/v_main.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_main.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/header_menu/v_register_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/header_menu/v_register_menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/v_login.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/v_main.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_main.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/v_not_found.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_not_found.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/v_register.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/v_register.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +87,9 @@
     </expand>
     <select />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="oop-blog" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -95,6 +100,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\xampp\htdocs\php2\oop-blog\.idea" />
+      </set>
+    </option>
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
@@ -109,14 +121,16 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
   <component name="ProjectId" id="1P5lv2fu87sEABz2ASkvr4OBctT" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql.8&#10;mysql" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Diagrams" />
+    <property name="settings.editor.selected.configurable" value="preferences.updates" />
   </component>
   <component name="RecentsManager">
     <key name="OPEN_URL_DIALOG">
@@ -130,11 +144,11 @@
       <recent name="C:\xampp\htdocs\php1\MVC_db_blog\controller" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\php2\oop-blog" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core\database" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\core" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog\core\services" />
+      <recent name="C:\xampp\htdocs\php2\oop-blog" />
       <recent name="C:\xampp\htdocs\php2\oop-blog\view\header_menu" />
-      <recent name="C:\xampp\htdocs\php2\oop-blog\view\v_main" />
-      <recent name="C:\xampp\htdocs\php1\MVC_db_blog\view\dashboard\texts" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -145,6 +159,7 @@
       <command value="open vakhtang" />
       <command value="git status" />
       <command value="open test" />
+      <command value="1+2" />
     </option>
   </component>
   <component name="RunDashboard">
@@ -163,13 +178,13 @@
     <configuration name="Base.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/model/Base.php">
       <method v="2" />
     </configuration>
-    <configuration name="Users.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/model/Users.php">
+    <configuration name="User.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/model/User.php">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="PHP Script.Base.php" />
-        <item itemvalue="PHP Script.Users.php" />
+        <item itemvalue="PHP Script.User.php" />
       </list>
     </recent_temporary>
   </component>
@@ -270,8 +285,27 @@
       <workItem from="1574491708939" duration="4904000" />
       <workItem from="1574517018652" duration="1948000" />
       <workItem from="1574519137333" duration="4347000" />
-      <workItem from="1574523643242" duration="4363000" />
+      <workItem from="1574523643242" duration="5825000" />
+      <workItem from="1574574004919" duration="5907000" />
+      <workItem from="1574608309753" duration="8398000" />
+      <workItem from="1574700859753" duration="7406000" />
+      <workItem from="1574741764872" duration="5484000" />
+      <workItem from="1574750755260" duration="3721000" />
+      <workItem from="1574827615649" duration="3508000" />
+      <workItem from="1574831515331" duration="299000" />
+      <workItem from="1574848414596" duration="165000" />
+      <workItem from="1575520652272" duration="2228000" />
+      <workItem from="1575952892598" duration="3586000" />
+      <workItem from="1575991746037" duration="1628000" />
     </task>
+    <task id="LOCAL-00001" summary="Articles: moved business logic from model into service">
+      <created>1574746954107</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1574746954107</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,16 +329,7 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/index.php</url>
-          <line>43</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Articles: moved business logic from model into service" />
+    <option name="LAST_COMMIT_MESSAGE" value="Articles: moved business logic from model into service" />
   </component>
 </project>

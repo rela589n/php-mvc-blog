@@ -3,7 +3,7 @@
 
 namespace model;
 
-use core\DBDriverInterface;
+use core\database\DBDriverInterface;
 use core\exceptions\DataBaseException;
 
 class Articles extends Base

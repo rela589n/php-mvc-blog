@@ -4,8 +4,8 @@
 namespace controller;
 
 
-use core\DBConnector;
-use core\DBDriver;
+use core\database\DBConnector;
+use core\database\DBDriver;
 use core\exceptions\AuthorizationException;
 use core\exceptions\IncorrectDataException;
 use model\User;
@@ -16,8 +16,7 @@ class Authentication extends Base
 {
     public function indexAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         $msg = $login = $password = '';
         $errors = null;
@@ -62,8 +61,7 @@ class Authentication extends Base
 
     public function registerAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         $userName = $password = $rePassword = $msg = '';
         $errors = null;

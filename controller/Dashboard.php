@@ -3,9 +3,8 @@
 
 namespace controller;
 
-
-use core\DBConnector;
-use core\DBDriver;
+use core\database\DBConnector;
+use core\database\DBDriver;
 use core\exceptions\TextsNotFoundException;
 use model\Texts;
 use model\User;
@@ -16,8 +15,7 @@ class Dashboard extends Base
 {
     public function indexAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         if (!$userService->isAuth()) {
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
@@ -31,14 +29,13 @@ class Dashboard extends Base
     }
 
     public function textsAction() {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         if (!$userService->isAuth()) {
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
-        $textsService = new \core\services\Texts(new Texts($db), new Validator());
+        $textsService = $this->container->fabricate('texts-service');
 
         try {
             $this->content = self::getTemplate('dashboard/texts/v_texts.php', [

@@ -82,7 +82,7 @@ class Validator
 
                 $this->validateEqualsTo($name, $fields, $rules)
             ) {
-                $this->clear [] = $name;
+                $this->clear [$name] = $fields[$name];
             }
         }
 

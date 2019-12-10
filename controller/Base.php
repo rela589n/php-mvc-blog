@@ -4,9 +4,11 @@
 namespace controller;
 
 
-use core\DBConnector;
-use core\DBDriver;
+use core\database\DBConnector;
+use core\database\DBDriver;
+use core\dependencies\ServiceBuilderBox;
 use core\exceptions\NotFoundException;
+use core\Registry;
 use core\Request;
 use model\Texts;
 use model\User;
@@ -19,43 +21,39 @@ abstract class Base
     protected $sidebar;
     protected $content;
     protected $footer;
+
     protected $message;
+
     protected $mainTemplate = 'v_main.php';
     protected $request;
+    protected $container;
 
+    private $registry;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
+        $this->registry = Registry::getInstance();
+        $this->request = $this->registry->getRequest();
+
+        $this->container = $this->registry->getDIContainer();
+        $this->container->register(new ServiceBuilderBox());
     }
 
     public function render()
     {
         if (!isset($this->menu)) {
-            $mUser = new User(
-                new DBDriver(
-                    DBConnector::getPdo()
-                )
-            );
-            $userService = new \core\services\User($mUser, new Validator());
-
             $this->menu = self::getTemplate('header_menu/v_main.php', [
-                'isAuth' => $userService->isAuth()
+                'isAuth' => $this->container->fabricate('user-service')->isAuth()
             ]);
         }
+
         if (!isset($this->sidebar)) {
             $this->sidebar = self::getTemplate('sidebar/v_sidebar.php');
         }
 
         if (!isset($this->footer)) {
-            $textsService = new \core\services\Texts(
-                new Texts(
-                    new DBDriver(
-                        DBConnector::getPdo()
-                    )
-                ),
-                new Validator()
-            );
+            $textsService = $this->container->fabricate('texts-service');
+
             $this->footer = self::getTemplate('v_footer.php', [
                 'title1' => $textsService->getText('footer_1'),
                 'title2' => $textsService->getText('footer_2'),

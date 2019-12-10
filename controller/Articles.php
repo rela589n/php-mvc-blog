@@ -3,8 +3,8 @@
 
 namespace controller;
 
-use core\DBConnector;
-use core\DBDriver;
+use core\database\DBConnector;
+use core\database\DBDriver;
 use core\exceptions\ArticlesNotFoundException;
 use core\exceptions\DataBaseException;
 use core\exceptions\IncorrectDataException;
@@ -24,11 +24,8 @@ class Articles extends Base
     {
         $this->title = 'All articles';
 
-        $db = new DBDriver(DBConnector::getPdo());
-
-        $mArticles = new ArticlesModel($db);
-        $articlesService = new ArticlesService($mArticles, new Validator());
-        $userService = new UserService(new User($db), new Validator());
+        $articlesService = $this->container->fabricate('articles-service');
+        $userService = $this->container->fabricate('user-service');
 
         try {
             $articles = $articlesService->getAllPreviews();
@@ -53,14 +50,10 @@ class Articles extends Base
      */
     public function singleAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-
-        $mArticles = new ArticlesModel($db);
-        $articlesService = new ArticlesService($mArticles, new Validator());
+        $articlesService = $this->container->fabricate('articles-service');
+        $userService = $this->container->fabricate('user-service');
 
         $article = $articlesService->getOneRepresentation($this->request->get('id'));
-
-        $userService = new UserService(new User($db), new Validator());
 
         $this->title = $article['title'];
         $this->content = self::getTemplate('articles/v_article.php', [
@@ -81,17 +74,14 @@ class Articles extends Base
      */
     public function editAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         if (!$userService->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
-        $mArticles = new ArticlesModel($db);
-        $articlesService = new ArticlesService($mArticles, new Validator());
-
+        $articlesService = $this->container->fabricate('articles-service');
 
         $msg = '';
         $errors = null;
@@ -151,8 +141,7 @@ class Articles extends Base
      */
     public function addAction()
     {
-        $db = new DBDriver(DBConnector::getPdo());
-        $userService = new UserService(new User($db), new Validator());
+        $userService = $this->container->fabricate('user-service');
 
         if (!$userService->isAuth()) {
             $_SESSION['back_redirect'] = $_SERVER["REQUEST_URI"];
@@ -160,8 +149,7 @@ class Articles extends Base
             $this->redirect('/auth/?msg=' . base64_encode(NOT_AUTHORIZED));
         }
 
-        $mArticles = new ArticlesModel($db);
-        $articlesService = new ArticlesService($mArticles, new Validator());
+        $articlesService = $this->container->fabricate('articles-service');
         $msg = '';
         $title = '';
         $content = '';

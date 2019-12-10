@@ -4,10 +4,17 @@
 namespace core;
 
 
+use core\dependencies\DIContainer;
+
 class Registry
 {
     private static $instance = null;
     private $request = null;
+    /**
+     * DIContainer variable
+     * @var null
+     */
+    private $container = null;
 
     private function __construct()
     {
@@ -29,5 +36,14 @@ class Registry
         }
 
         return $this->request;
+    }
+
+    public function getDIContainer(): DIContainer
+    {
+        if ($this->container === null) {
+            $this->container = new DIContainer();
+        }
+
+        return $this->container;
     }
 }

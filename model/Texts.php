@@ -4,7 +4,7 @@
 namespace model;
 
 
-use core\DBDriverInterface;
+use core\database\DBDriverInterface;
 use core\exceptions\DataBaseException;
 
 class Texts extends Base

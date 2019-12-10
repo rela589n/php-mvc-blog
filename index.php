@@ -4,6 +4,7 @@ include_once 'config.php';
 
 use controller\NotFound;
 use core\exceptions\NotFoundException;
+use core\Registry;
 use core\Request;
 
 spl_autoload_register(function ($classPath) {
@@ -38,17 +39,17 @@ try {
             $id = $params[2];
         }
         $_GET['id'] = $id;
-        $request = new Request();
+        Registry::getInstance()->getRequest();
         unset($_GET['id']);
 
         $action .= 'Action';
 
-        $controller = new $controller($request);
+        $controller = new $controller();
         $controller->$action();
         $controller->render();
     }
 } catch (NotFoundException $e) {
-    $controller = new NotFound($request);
+    $controller = new NotFound();
     $controller->indexAction($e->getMessage());
     $controller->render();
 }

@@ -2,7 +2,7 @@
 
 namespace model;
 
-use core\DBDriverInterface;
+use core\database\DBDriverInterface;
 
 abstract class Base
 {
